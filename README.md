@@ -58,6 +58,17 @@ Each day’s work is documented below and corresponding source code is added in 
 #### 🔹 Programs Practiced
 - Solved Leetcode Problem
 
+### ⏳ Day 4 - Grocery ArrayList Implementation( Collection Framework )
+
+📅 **Date:** 14th January 2026
+
+#### 🔹 Topics Covered
+- Collection FrameWork
+
+#### 🔹 Programs Practiced
+- Solved Leetcode Problem
+
+📂 **Code Location:** `src/day4`
 
 ---
 ## 🛠️ Tools & Technologies
