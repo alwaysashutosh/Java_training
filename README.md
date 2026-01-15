@@ -70,6 +70,18 @@ Each day’s work is documented below and corresponding source code is added in 
 
 📂 **Code Location:** `src/day4`
 
+
+### ⏳ Day 5 - HashMap
+
+📅 **Date:** 15th January 2026
+
+#### 🔹 Topics Covered
+- Collection FrameWork - HashMap
+
+#### 🔹 Programs Practiced
+- Solved Leetcode Problem
+
+📂 **Code Location:** `src/day5`
 ---
 ## 🛠️ Tools & Technologies
 - Java (JDK)
