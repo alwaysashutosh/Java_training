@@ -1,0 +1,4781 @@
+1. Write a Program that inserts a single character into a string at a specified position.
+
+Example: Insert 'A' at position 3 in "Hello World".
+
+#include<stdio.h>
+#include<string.h>
+void insertAt(char str[], int pos, char ch){
+    int n=strlen(str);
+    for(int i=n;i>=pos;i--){
+        str[i+1]=str[i];
+    }
+    str[pos]=ch;
+}
+int main(){
+    char str[100];
+    int pos;
+    char ch;
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    printf("enter position to insert: ");
+    scanf("%d", &pos);
+    printf("enter character: ");
+    scanf(" %c", &ch);
+    insertAt(str, pos, ch);
+    printf("final string is %s\n", str);
+    return 0;
+}
+
+----OR-------
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100], ch;
+    int pos;
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    printf("enter character to insert: ");
+    scanf("%c", &ch);
+    printf("enter position to insert: ");
+    scanf("%d", &pos);
+    int n=strlen(str);
+    for(int i=n;i>=pos;i--){
+        str[i+1]=str[i];
+    }
+    str[pos]=ch;
+    printf("%s", str);
+    return 0;
+}
+
+-------------------------------------------------------------------END------------------------
+
+2. Delete Alternating Characters
+Given a string s, delete alternating characters from the string to form a new string. For example, delete the second, fourth, sixth, etc., characters.
+
+Example:
+Input: s = "abcdef"
+Output: "ace"
+
+#include<stdio.h>
+#include<string.h>
+void deleteAl(char str[]){
+    int n=strlen(str);
+    int j=0;
+    for(int i=0;i<n;i++){
+        if(i%2==0){
+            str[j++]=str[i];
+        }
+    }
+    str[j]='\0';
+}
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    deleteAl(str);
+    printf("string is %s\n", str);
+    return 0;
+}
+
+------OR------------------
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    for(int i=0;i<n;i++){
+        if(i%2==0){
+            printf("%c", str[i]);
+        }
+    }
+    return 0;
+}
+
+-------------END------------------------------------------------------------------------------
+
+
+3. Remove Duplicate Consecutive Characters-----------------------------------------????????????????????//
+
+Given a string s, remove consecutive duplicate characters until no consecutive duplicates remain. For example, from "abbaccd", remove "bb" and "cc" in separate operations.
+
+Example:
+Input: s = "abbaccd"
+Output: "d"
+
+Initial String: "abbaccd"
+First Pass:
+Find and remove "bb".
+The string becomes "aaccd".
+
+Second Pass:
+Find and remove "aa".
+The string becomes "ccd".
+
+Third Pass:
+Find and remove "cc".
+The string becomes "d".
+Final String: "d"
+
+#include<stdio.h>
+#include<string.h>
+#include<stdbool.h>
+void removeCons(char str[]){
+    bool changed;
+    do{
+        changed=false;
+        int len=strlen(str);
+        char temp[100];
+        int j=0;
+        for(int i=0; i<len;){
+            if(i<len-1 && str[i]==str[i+1]){
+                char dup=str[i];
+                while(i<len && str[i]==dup){
+                    i++;
+                }
+                changed=true;
+            }else{
+                temp[j++]=str[i++];
+            }
+        }
+        temp[j]='\0';
+        strcpy(str, temp);
+    }while(changed);
+}
+int main(){
+    char str[100];
+    printf("enter string: ");
+    
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; 
+    removeCons(str);
+    printf("final string: %s", str);
+    return 0;
+
+}
+
+---------------OR--------------------------
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+void removeConsecutiveDuplicates(char str[]) {
+    bool changed;
+    do {
+        changed = false;
+        int len = strlen(str);
+        char result[100];
+        int top = -1;
+
+        for (int i = 0; i < len; i++) {
+            if (top >= 0 && result[top] == str[i]) {
+                // Found a duplicate, pop it
+                while (i < len && result[top] == str[i]) {
+                    i++;
+                }
+                top--; // Remove last added character
+                changed = true;
+            } else {
+                result[++top] = str[i]; // Push character
+            }
+        }
+
+        result[top + 1] = '\0';
+        strcpy(str, result);
+    } while (changed);
+}
+
+int main() {
+    char str[100];
+    printf("Enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove newline
+
+    removeConsecutiveDuplicates(str);
+    printf("Final String: \"%s\"\n", str);
+
+    return 0;
+}
+
+-------------------END----------------------------------------------
+
+
+4. Maximum Deletions of Any Consecutive Character Pair
+Given a string s, delete any two consecutive characters from the string . Return the maximum number of such deletions possible.
+Example:
+Input: s = "aabbcc"
+Output: 3
+
+#include<stdio.h>
+#include<string.h>
+int maxDel(char str[]){
+    char stack[100];
+    int top=-1;
+    int deletion=0;
+    for(int i=0; str[i]!='\0';i++){
+        if(top>=0 && stack[top] == str[i]){
+            top--;
+            deletion++;
+        }else{
+            stack[++top]=str[i];
+        }
+    }
+    return deletion;
+}
+int main(){
+    char str[100];
+    printf("Enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove newline
+
+    int result = maxDel(str);
+    printf("Maximum deletions: %d\n", result);
+
+    return 0;
+
+}
+
+---------------------END-----------------------------------------
+
+5. Write a program that prompts the user for a positive integer and then computes the sum of all the digits of the number. For example, if the user enters 2784, then the program reports 21. If the user enters 59, then the program reports 14. The program should work for any number having one to ten digits.
+
+#include<stdio.h>
+int main(){
+    int number, digit, sum=0;
+    printf("enter any number: ");
+    scanf("%d", &number);
+    if(number<=0){
+        printf("enter valid number: \n");
+        return 1;
+    }
+    while(number>0){
+        digit=number%10;
+        sum+=digit;
+        number/=10;
+    }
+    printf("sum of digits: ", sum);
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+6. Write a program that prompts the user for a positive integer and then reports the closest integer having a whole number square root. For example, if the user enters 8, then the program reports 9. If the user enters 18, then the program reports 16.The program should work for any number having one to seven digits.---------------------------------------
+
+#include<stdio.h>
+#include<math.h>
+int main(){
+    int number, lowerRoot, upperRoot, lowerSquare, upperSquare;
+    printf("enter any number: ");
+    scanf("%d", &number);
+    if(number<=0){
+        printf("enter positive integer.\n");
+        return 1;
+    }
+    lowerRoot=(int)sqrt(number);
+    upperRoot=lowerRoot+1;
+    lowerSquare=lowerRoot*lowerRoot;
+    upperSquare=upperRoot*upperRoot;
+    if((number-lowerSquare)<=(upperSquare-number)){
+        printf("closest integer %d\n", lowerSquare);
+    }else{
+        printf("closest integer %d\n", upperSquare);
+    }
+    return 0;
+
+}
+
+---------------------END-----------------------------------------
+
+
+7.  Write a program to remove duplicate elements from an array.
+
+#include<stdio.h>
+int main(){
+    int arr[100], freq[100], res[100];
+    int n,i,j,count, index=0;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+        freq[i]=-1;
+    }
+    for(i=0;i<n;i++){
+        count=1;
+        for(j=i+1;j<n;j++){
+            if(arr[i]==arr[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    for(i=0;i<n;i++){
+        if(freq[i]==1){
+            res[index++]=arr[i];
+        }
+    }
+    printf("non duplicate elements: \n");
+    for(i=0;i<index;i++){
+        printf("%d", res[i]);
+    }
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+8. You are given an integer, N(array size) and an integer array, arr.
+
+A "couple" is any two adjacent elements in arr which are non-circular. This means that elements of a couple must NOT wrap around the end of the array.
+
+﻿Find the total number of couples in arr whose sum is perfectly divisible by N.
+Input: N=4 arr=[2,2,4,0]
+Explanation: Couples: (2,2), (2,4), (4,0) Sums: 4, 6, 4 Only (2,2) and (4,0) are divisible by 4
+Expected Output: 2
+Input: N=5 arr=[1,2,3,4,5]
+Explanation: Couples: (1,2), (2,3), (3,4), (4,5) Sums: 3, 5, 7, 9 → None divisible by 5
+Expected Output: 0
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, num, count=0;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ",n);
+    for(int i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    printf("enter number: ");
+    scanf("%d", &num);
+    for(int i=0, j=i+1; i<n-1, j<n; i++,j++){
+
+        if((arr[i]+arr[j])%num==0){
+            // printf("%d, %d", arr[i],arr[j]);
+            count++;
+        }
+    }
+    printf("%d", count);
+    
+    return 0;
+
+}
+
+---------------------END-----------------------------------------
+
+ 
+9. Reverse an array
+
+#include<stdio.h>
+int main(){
+    int arr[100], temp, i, n;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    int start=0;
+    int end=n-1;
+    while(start<end){
+        int temp=arr[start];
+        arr[start]=arr[end];
+        arr[end]=temp;
+        start++;
+        end--;
+    }
+    for(i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+10. Write a program to reverse the elements of an array without using a second array.
+
+11. Find the second largest element
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, i;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    int largest=arr[0]; 
+    int second;
+    for(i=0;i<n;i++){
+        if(arr[i]>largest){
+            second=largest;
+            largest=arr[i];
+        }else if(arr[i]>second && arr[i]!=largest){
+            second=arr[i];
+        }
+    }
+    printf("%d %d", largest, second);
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+12. Write a program to find the second largest number in an array.
+
+13. Count the frequency of each element in the array. 
+
+#include<stdio.h>
+int main(){
+    int arr[100], freq[100];
+    int n,i,j,count;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+        freq[i]=-1;
+    }
+    for(i=0;i<n;i++){
+        count=1;
+        for(j=i+1;j<n;j++){
+            if(arr[i]==arr[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    for(i=0;i<n;i++){
+        if(freq[i]!=0){
+            printf("%d occurs %d times.\n", arr[i], freq[i]);
+        }
+    }
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+14. Merge two sorted arrays into one sorted array.
+
+#include <stdio.h>
+
+void mergeSortedArrays(int arr1[], int n1, int arr2[], int n2, int merged[]) {
+    int i = 0, j = 0, k = 0;
+
+    // Merge elements from both arrays in sorted order
+    while (i < n1 && j < n2) {
+        if (arr1[i] < arr2[j]) {
+            merged[k++] = arr1[i++];
+        } else {
+            merged[k++] = arr2[j++];
+        }
+    }
+
+    // Copy remaining elements from arr1
+    while (i < n1) {
+        merged[k++] = arr1[i++];
+    }
+
+    // Copy remaining elements from arr2
+    while (j < n2) {
+        merged[k++] = arr2[j++];
+    }
+}
+
+int main() {
+    int arr1[] = {1, 3, 5, 7};
+    int arr2[] = {2, 4, 6, 8};
+    int n1 = sizeof(arr1) / sizeof(arr1[0]);
+    int n2 = sizeof(arr2) / sizeof(arr2[0]);
+    int merged[n1 + n2];
+
+    mergeSortedArrays(arr1, n1, arr2, n2, merged);
+
+    printf("Merged sorted array:\n");
+    for (int i = 0; i < n1 + n2; i++) {
+        printf("%d ", merged[i]);
+    }
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+
+15. Find all pairs of elements in an array whose sum is equal to a given number.👌👌👌👌👌👌👌👌👌
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, num;
+    printf("enter number of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(int i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    printf("enter num: ");
+    scanf("%d", &num);
+    for(int i=0;i<n;i++){
+        for(j=i+1;j<n;j++){
+            if(arr[i]+arr[j]==num){
+                printf("%d, %d", arr[i], arr[j]);
+            }
+        }
+    }
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+16. Check if All Words Are Anagrams ----
+Input comma seperated words and, check if all the words are anagrams of each other. Return true if they are, otherwise false.
+Example:
+Input: ["dusty", "study", "dust", "stydy"]
+Output: false
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
+
+#define MAX_WORDS 100
+#define MAX_LEN 100
+
+// Function to sort characters in a string
+void sortString(char *str) {
+    int len = strlen(str);
+    for (int i = 0; i < len - 1; i++) {
+        for (int j = i + 1; j < len; j++) {
+            if (str[i] > str[j]) {
+                char temp = str[i];
+                str[i] = str[j];
+                str[j] = temp;
+            }
+        }
+    }
+}
+
+// Function to check if all words are anagrams
+bool areAllAnagrams(char words[][MAX_LEN], int count) {
+    char sorted[MAX_WORDS][MAX_LEN];
+
+    for (int i = 0; i < count; i++) {
+        strcpy(sorted[i], words[i]);
+        sortString(sorted[i]);
+    }
+
+    for (int i = 1; i < count; i++) {
+        if (strcmp(sorted[0], sorted[i]) != 0) {
+            return false;
+        }
+       return true;
+    }
+}
+
+int main() {
+    char input[] = "dusty,study,dust,stydy";
+    char words[MAX_WORDS][MAX_LEN];
+    int count = 0;
+
+    // Tokenize input string
+    char *token = strtok(input, ",");
+    while (token != NULL && count < MAX_WORDS) {
+        strcpy(words[count++], token);
+        token = strtok(NULL, ",");
+    }
+
+    if (areAllAnagrams(words, count)) {
+        printf("true\n");
+    } else {
+        printf("false\n");
+    }
+
+    return 0;
+}
+----------------------------------------------END-----------------------------------
+
+17. Given a list of words, find all words that are unique (neither anagrams nor identical to any other word in the list).
+Example:
+Input: ["listen", "silent", "hello", "world", "abc", "cba"]
+Output: ["hello", "world"]??????????????????????????????????????/111111111111
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+void sortString(char *str) {
+    int len = strlen(str);
+    for (int i = 0; i < len - 1; i++) {
+        for (int j = i + 1; j < len; j++) {
+            if (str[i] > str[j]) {
+                char temp = str[i];
+                str[i] = str[j];
+                str[j] = temp;
+            }
+        }
+    }
+}
+
+bool isAnagram(char *a, char *b) {
+    if (strlen(a) != strlen(b)) return false;
+
+    char sortedA[100], sortedB[100];
+    strcpy(sortedA, a);
+    strcpy(sortedB, b);
+    sortString(sortedA);
+    sortString(sortedB);
+
+    return strcmp(sortedA, sortedB) == 0;
+}
+
+int main() {
+    char words[100][100] = {"listen", "silent", "hello", "world", "abc", "cba"};
+    int n = 6;
+    bool isUnique[100];
+
+    for (int i = 0; i < n; i++) {
+        isUnique[i] = true;
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (!isUnique[i]) continue;
+        for (int j = 0; j < n; j++) {
+            if (i != j && isAnagram(words[i], words[j])) {
+                isUnique[i] = false;
+                isUnique[j] = false;
+            }
+        }
+    }
+
+    printf("Unique words (not anagrams or identical):\n");
+    for (int i = 0; i < n; i++) {
+        if (isUnique[i]) {
+            printf("%s\n", words[i]);
+        }
+    }
+
+    return 0;
+}
+
+--------------------------------------------END-----------------------------------------
+
+18. Write a C program to remove from last occurrence of a word in given string
+Example:
+Input string: I am a programmer. I learn at Codeforwin.
+Input word to remove: I
+
+Output
+String after removing last occurrence of 'I':
+I am a programmer.  learn at Codeforwin
+
+#include<stdio.h>
+#include<string.h>
+void removeOccur(char *str, const char *word){
+    char *lastPos=NULL;
+    char *currentPos=str;
+    while((currentPos=strstr(currentPos, word))!=NULL){
+        lastPos=currentPos;
+        currentPos++;
+    }
+    if(lastPos==NULL){
+        printf("word not found.\n");
+        return;
+    }
+    int len=strlen(word);
+    char temp[1000];
+    
+    strncpy(temp, str, lastPos - str);
+    temp[lastPos - str] = '\0';
+    strcat(temp, lastPos + len);
+    strcpy(str, temp);
+
+}
+
+int main() {
+    char str[1000] = "I am a programmer. I learn at Codeforwin.";
+    char word[100] = "I";
+
+    removeLastOccurrence(str, word);
+
+    printf("String after removing last occurrence of '%s':\n%s\n", word, str);
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+19. Write a C program to replace first occurrence of a character with another character in a string.
+Example
+
+Input
+
+Input string: I love programming.
+Input character to replace: .
+Input character to replace with: !
+
+Output
+
+String after replacing '.' with '!': I love programming!
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[100], ch1, ch2;
+    int i;
+
+    printf("Enter the input string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove newline character
+
+    printf("Enter character to replace: ");
+    scanf(" %c", &ch1); // Space before %c to consume any leftover newline
+
+    printf("Enter character to replace with: ");
+    scanf(" %c", &ch2);
+
+    // Replace first occurrence
+    for(i = 0; str[i] != '\0'; i++) {
+        if(str[i] == ch1) {
+            str[i] = ch2;
+            break;
+        }
+    }
+
+    printf("String after replacing '%c' with '%c': %s\n", ch1, ch2, str);
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+20. Write a program to input pipe seperated words and display them in the reverse order.??????????????????
+
+21. You are given a string, str.  You need to find the score of str as per the following rules:?????????????????????/
+
+  1) For each palindrome of length 4 in str, add 5 to the score
+
+  2) For each palindrome of length 5 in str, add 10 to the score
+
+output the final score
+
+Example:  input string is ABCBAAAA  score will be 15 because ABCBA - 10 points (palindrome of length 5) AAAA - 5 points (Palindrome of length 4)-----------------------------???????????????????
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+// Function to check if a substring is a palindrome
+bool isPalindrome(char *str, int start, int length) {
+    int end = start + length - 1;
+    for (int i = 0; i < length / 2; i++) {
+        if (str[start + i] != str[end - i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Function to calculate the score
+int calculateScore(char *str) {
+    int score = 0;
+    int len = strlen(str);
+
+    for (int i = 0; i <= len - 4; i++) {
+        if (isPalindrome(str, i, 4)) {
+            score += 5;
+        }
+    }
+
+    for (int i = 0; i <= len - 5; i++) {
+        if (isPalindrome(str, i, 5)) {
+            score += 10;
+        }
+    }
+
+    return score;
+}
+
+int main() {
+    char str[100];
+    printf("Enter the string: ");
+    scanf("%s", str);
+
+    int score = calculateScore(str);
+    printf("Score: %d\n", score);
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+22. Write a function that inserts a substring into a string at a specified position.
+Example: Insert "ABC" at position 3 in "C programming". ????????????????????????????????????????
+
+#include <stdio.h>
+#include <string.h>
+
+void insertSubstring(char *original, const char *toInsert, int position) {
+    char temp[300];
+
+    // Copy part before the insertion point
+    strncpy(temp, original, position);
+    temp[position] = '\0';
+
+    // Append the new substring
+    strcat(temp, toInsert);
+
+    // Append the remaining part of the original string
+    strcat(temp, original + position);
+
+    // Copy result back to original
+    strcpy(original, temp);
+}
+
+int main() {
+    char str[300] = "C programming";
+    char insert[] = "ABC";
+    int pos = 3;
+
+    insertSubstring(str, insert, pos);
+
+    printf("Modified string: %s\n", str);
+
+    return 0;
+}
+
+
+---------------------END-----------------------------------------
+
+23. Write a Program that inserts multiple substrings into a string at specified positions.
+Example: Insert "Hello" at position 0, "World" at position 5, and "!" at the end of the string "ABCDEF".???????????????????
+
+#include <stdio.h>
+#include <string.h>
+
+void insertSubstring(char *original, const char *toInsert, int position) {
+    char temp[300];
+
+    // Copy part before insertion point
+    strncpy(temp, original, position);
+    temp[position] = '\0';
+
+    // Append the new substring
+    strcat(temp, toInsert);
+
+    // Append the remaining part of the original string
+    strcat(temp, original + position);
+
+    // Copy result back to original
+    strcpy(original, temp);
+}
+
+int main() {
+    char str[300] = "ABCDEF";
+
+    // Insert "Hello" at position 0
+    insertSubstring(str, "Hello", 0);
+
+    // Insert "World" at position 5
+    insertSubstring(str, "World", 5);
+
+    // Insert "!" at the end
+    insertSubstring(str, "!", strlen(str));
+
+    printf("Modified string: %s\n", str);
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+
+24. Write a Program that removes a substring from a specified position in a string and inserts a new substring at the same position.
+Example: Remove "World" from "HelloWorld" and insert "Universe" at the same position. 
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[100] = "HelloWorld";
+    char toRemove[] = "World";
+    char toInsert[] = "Universe";
+    char result[200];
+
+    // Find position of substring to remove
+    char *pos = strstr(str, toRemove);
+    if (pos == NULL) {
+        printf("Substring to remove not found.\n");
+        return 0;
+    }
+
+    int index = pos - str;
+
+    // Copy part before the substring
+    strncpy(result, str, index);
+    result[index] = '\0';
+
+    // Append the new substring
+    strcat(result, toInsert);
+
+    // Append the part after the removed substring
+    strcat(result, str + index + strlen(toRemove));
+
+    printf("Modified string: %s\n", result);
+
+    return 0;
+}
+
+
+/////////////////////////////////////////////////////////////
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[200], toRemove[100], toInsert[100], result[300];
+
+    // Input original string
+    printf("Enter the original string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove newline
+
+    // Input substring to remove
+    printf("Enter the substring to remove: ");
+    fgets(toRemove, sizeof(toRemove), stdin);
+    toRemove[strcspn(toRemove, "\n")] = '\0';
+
+    // Input substring to insert
+    printf("Enter the substring to insert: ");
+    fgets(toInsert, sizeof(toInsert), stdin);
+    toInsert[strcspn(toInsert, "\n")] = '\0';
+
+    // Find position of substring to remove
+    char *pos = strstr(str, toRemove);
+    if (pos == NULL) {
+        printf("Substring to remove not found.\n");
+        return 0;
+    }
+
+    int index = pos - str;
+
+    // Copy part before the substring
+    strncpy(result, str, index);
+    result[index] = '\0';
+
+    // Append the new substring
+    strcat(result, toInsert);
+
+    // Append the part after the removed substring
+    strcat(result, str + index + strlen(toRemove));
+
+    // Output the result
+    printf("Modified string: %s\n", result);
+
+    return 0;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+24.-----Input 3 strings x,y and z. Check if z is a perfect shuffle of x and y.???????????????????
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+// Function to check if z is a perfect shuffle of x and y
+bool isPerfectShuffle(const char *x, const char *y, const char *z) {
+    int lenX = strlen(x);
+    int lenY = strlen(y);
+    int lenZ = strlen(z);
+
+    // Length of z must be equal to sum of lengths of x and y
+    if (lenZ != lenX + lenY) {
+        return false;
+    }
+
+    int i = 0, j = 0, k = 0;
+
+    // Try to match characters from x and y to z
+    while (k < lenZ) {
+        if (i < lenX && x[i] == z[k]) {
+            i++;
+        } else if (j < lenY && y[j] == z[k]) {
+            j++;
+        } else {
+            return false;
+        }
+        k++;
+    }
+
+    return (i == lenX && j == lenY);
+}
+
+int main() {
+    char x[100], y[100], z[200];
+
+    printf("Enter string x: ");
+    scanf("%s", x);
+
+    printf("Enter string y: ");
+    scanf("%s", y);
+
+    printf("Enter string z: ");
+    scanf("%s", z);
+
+    if (isPerfectShuffle(x, y, z)) {
+        printf("Yes, z is a perfect shuffle of x and y.\n");
+    } else {
+        printf("No, z is NOT a perfect shuffle of x and y.\n");
+    }
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+25. The program should input N lines of a string. In each line find the position of "the" and "of" and print. If it is not found first "-1".?????????????????????????/
+
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_LINES 100
+#define MAX_LEN 1000
+
+int main() {
+    int N;
+    char lines[MAX_LINES][MAX_LEN];
+
+    // Input number of lines
+    printf("Enter number of lines: ");
+    scanf("%d", &N);
+    getchar(); // consume newline after scanf
+
+    // Input each line
+    printf("Enter %d lines:\n", N);
+    for (int i = 0; i < N; i++) {
+        fgets(lines[i], MAX_LEN, stdin);
+        // Remove trailing newline if present
+        size_t len = strlen(lines[i]);
+        if (len > 0 && lines[i][len - 1] == '\n') {
+            lines[i][len - 1] = '\0';
+        }
+    }
+
+    // Process each line
+    for (int i = 0; i < N; i++) {
+        char *pos_the = strstr(lines[i], "the");
+        char *pos_of = strstr(lines[i], "of");
+
+        int index_the = (pos_the != NULL) ? (int)(pos_the - lines[i]) : -1;
+        int index_of = (pos_of != NULL) ? (int)(pos_of - lines[i]) : -1;
+
+        printf("Line %d: Position of 'the' = %d, Position of 'of' = %d\n", i + 1, index_the, index_of);
+    }
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+26. Input an array with N elements for each element X in an array find the next element which is greater than X and divisible by X. Display the count of how many such element exists.
+
+#include <stdio.h>
+
+int main() {
+    int arr[100], n, count = 0;
+
+    // Input array size
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    // Input array elements
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Logic to find all next greater and divisible elements
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] > arr[i] && arr[j] % arr[i] == 0) {
+                count++;
+            }
+        }
+    }
+
+    // Output the result
+    printf("Total count of valid next elements: %d\n", count);
+
+    return 0;
+}
+
+
+---------------------END-----------------------------------------
+
+27. Write "|" separated words . Sort the words and print them in pipe separated. ????????????????????
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_WORDS 100
+#define MAX_LEN 100
+
+// Comparison function for qsort
+int compare(const void *a, const void *b) {
+    return *(char*)a-*(char*)b;
+}
+
+int main() {
+    char input[] = "banana|apple|cherry|date";
+    char *words[MAX_WORDS];
+    int count = 0;
+
+    // Tokenize the input string using '|'
+    char *token = strtok(input, "|");
+    while (token != NULL && count < MAX_WORDS) {
+        words[count++] = token;
+        token = strtok(NULL, "|");
+    }
+
+    // Sort the words
+    qsort(words, count, sizeof(char *), compare);
+
+    // Print the sorted words separated by '|'
+    for (int i = 0; i < count; i++) {
+        printf("%s", words[i]);
+        if (i < count - 1) {
+            printf("|");
+        }
+    }
+    printf("\n");
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+28. Input a string having both Alpha numeric characters. Print partitioned parts in left and right where left contains the value pushed and right contained all string.???????????????????????
+
+#include<stdio.h>
+#include<string.h>
+// #include<ctype.h>
+#define MAX_LEN 1000
+
+void alphaNum(char* str, int len, char* result){
+    char str2[MAX_LEN];
+    int j=0, k=0;
+    char str3[MAX_LEN];
+
+    for(int i=0; i<len; i++){
+        if((str[i]>='A' && str[i]<='Z') || (str[i]>='a' && str[i]<='z')){
+            str3[k++]=str[i];
+        }else if(str[i]>='0' && str[i]<='9'){
+            str2[j++]=str[i];
+
+        }   
+    }
+    str2[j]='\0';
+    str3[k]='\0';
+    strcpy(result, str2);
+    strcat(result, str3);
+}
+int main(){
+    char str[]="a1b2c3";
+    int len=strlen(str);
+    char result[MAX_LEN];
+    alphaNum(str, len, result);
+    printf("result is: %s\n", result);
+    return 0;
+}
+
+------------------------------------------
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>  // for isalpha and isdigit
+
+#define MAX_LEN 1000
+
+void alphaNum(char str1[MAX_LEN], int len, char result[MAX_LEN]) {
+    char digits[MAX_LEN];
+    char letters[MAX_LEN];
+    int j = 0, k = 0;
+
+    for (int i = 0; i < len; i++) {
+        if (isalpha(str1[i])) {
+            letters[k++] = str1[i];
+        } else if (isdigit(str1[i])) {
+            digits[j++] = str1[i];
+        }
+    }
+
+    digits[j] = '\0';
+    letters[k] = '\0';
+
+    strcpy(result, digits);
+    strcat(result, letters);
+}
+
+int main() {
+    char str1[] = "a1b2c3";
+    int len = strlen(str1);
+    char result[MAX_LEN];
+
+    alphaNum(str1, len, result);
+    printf("Result is: %s\n", result);  // Output: 123abc
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+ 29. You are given a string S. Calculate the length of the longest palindromic substring of the string S. A substring is a contiguous part of a given string.
+
+Note that there can be many longest palindromic substrings. You have to return the length of any one of them. ??????????????
+
+
+#include <stdio.h>
+#include <string.h>
+
+// Function to check if a substring is a palindrome
+int isPalindrome(char str[], int start, int end) {
+    while (start < end) {
+        if (str[start] != str[end])
+            return 0;
+        start++;
+        end--;
+    }
+    return 1;
+}
+
+// Function to find the length of the longest palindromic substring
+int longestPalindromeLength(char str[]) {
+    int maxLength = 1;
+    int len = strlen(str);
+
+    for (int i = 0; i < len; i++) {
+        for (int j = i; j < len; j++) {
+            if (isPalindrome(str, i, j)) {
+                int currentLength = j - i + 1;
+                if (currentLength > maxLength) {
+                    maxLength = currentLength;
+                }
+            }
+        }
+    }
+
+    return maxLength;
+}
+
+int main() {
+    char str[1000];
+    printf("Enter the string: ");
+    scanf("%s", str);  // Reads input without spaces
+
+    int result = longestPalindromeLength(str);
+    printf("Length of the longest palindromic substring: %d\n", result);
+
+    return 0;
+}
+
+
+---------------------END-----------------------------------------
+
+30. Given a string s, delete pairs of consecutive vowels (like "ae", "io", etc.). Return the number of deletions made.
+Example:
+Input: s = "beautiful"
+Output: 1 (deletes "ea")....
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+bool isVowel(char ch) {
+    ch = tolower(ch);
+    return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+}
+
+int deleteConsecutiveVowelPairs(char *s) {
+    int len = strlen(s);
+    int deletions = 0;
+    int i = 0, j = 0;
+
+    while (i < len) {
+        if (i < len - 1 && isVowel(s[i]) && isVowel(s[i + 1])) {
+            // Skip both vowels
+            i += 2;
+            deletions++;
+        } else {
+            s[j++] = s[i++];
+        }
+    }
+    s[j] = '\0'; // Null-terminate the modified string
+    return deletions;
+}
+
+int main() {
+    char s[] = "beautiful";
+    int result = deleteConsecutiveVowelPairs(s);
+    printf("Modified string: %s\n", s);
+    printf("Number of deletions: %d\n", result);
+    return 0;
+}
+
+
+#include<stdio.h>
+#include<string.h>
+#include<stdbool.h>
+bool isvowel(char ch){
+    ch = tolower(ch);
+    return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+}
+
+int delete(char *s){
+    int len=strlen(s);
+    int deletion=0;
+    int i=0,j=0;
+    while(i<len){
+        if(i<len-1 && isvowel(s[i]) && isvowel(s[i+1])){
+            i+=2;
+            deletion++;
+        }else{
+            s[j++]=s[i++];
+        }
+    }
+    s[j]='\0';
+    return deletion;
+}
+
+
+---------------------END-----------------------------------------
+
+31.  Write a program that takes two comma-separated lists of integers as input. For each integer  N in the first list, calculate the sum of its occurrences in the second list and print  N−S for each integer.
+PPPP
+Sample input:
+Enter the first list of integers (comma-separated):  5, 3, 4,6
+Enter the second list of integers (comma-separated):  5,4,2,1,4,3,3,2,5,3
+Sample Output
+5-10
+4-8
+3-9
+6-0
+---------------------???????????????????????????????????????????????????????
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+// Function to parse comma-separated input into an array
+int parseInput(char *input, int arr[]) {
+    int count = 0;
+    char *token = strtok(input, ",");
+    while (token != NULL) {
+        arr[count++] = atoi(token);
+        token = strtok(NULL, ",");
+    }
+    return count;
+}
+
+int main() {
+    char input1[500], input2[500];
+    int list1[MAX], list2[MAX];
+    int count1, count2;
+
+    // Input first list
+    printf("Enter the first list of integers (comma-separated): ");
+    fgets(input1, sizeof(input1), stdin);
+    input1[strcspn(input1, "\n")] = '\0'; // remove newline
+
+    // Input second list
+    printf("Enter the second list of integers (comma-separated): ");
+    fgets(input2, sizeof(input2), stdin);
+    input2[strcspn(input2, "\n")] = '\0';
+
+    // Parse inputs
+    count1 = parseInput(input1, list1);
+    count2 = parseInput(input2, list2);
+
+    // Process each number in list1
+    for (int i = 0; i < count1; i++) {
+        int N = list1[i];
+        int sum = 0;
+        for (int j = 0; j < count2; j++) {
+            if (list2[j] == N) {
+                sum += list2[j];
+            }
+        }
+        printf("%d-%d\n", N, sum);
+    }
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+???????????????????????????????????????????????????????????????????????????????????/
+
+32. Define a structure to hold the product sales information, structure will contain the product_ID and total_sales_amount. Write a program that accepts multiple product records (product_ID and total_sales_amount) and prints them in decreasing order of total_sales_amount. In case there are multiple records pertaining to the same product_id, the program should choose a single record containing the highest total_sales_amount.
+
+The program should be capable of accepting a multi-line input.
+
+Each subsequent line of input will contain a Product record, that is, a product_ID and total_sales_amount(separated by a hyphen). The output should consist of the combination of product_ID and corresponding total_sales_amount in decreasing order of score.
+
+Sample Input:
+P1001-200
+P1002-150
+P1003-300
+P1001-100
+P1002-200
+P1003-50
+P1001-50
+P1002-250
+Sample Output:
+P1003-300
+P1002-250
+P1001-200
+??????????????????????????????????????????????????????????????????????/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_RECORDS 100
+#define MAX_ID_LEN 20
+
+typedef struct {
+    char product_ID[MAX_ID_LEN];
+    int total_sales_amount;
+} Product;
+
+int findProduct(Product products[], int count, const char *id) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(products[i].product_ID, id) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void sortProducts(Product products[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = i + 1; j < count; j++) {
+            if (products[i].total_sales_amount < products[j].total_sales_amount) {
+                Product temp = products[i];
+                products[i] = products[j];
+                products[j] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    Product products[MAX_RECORDS];
+    int count = 0;
+    char line[50];
+
+    printf("Enter product records (product_ID-total_sales_amount), one per line.\n");
+    printf("Press Ctrl+D (Linux/macOS) or Ctrl+Z (Windows) to end input.\n");
+
+    while (fgets(line, sizeof(line), stdin)) {
+        char id[MAX_ID_LEN];
+        int amount;
+
+        if (sscanf(line, "%[^-]-%d", id, &amount) == 2) {
+            int index = findProduct(products, count, id);
+            if (index != -1) {
+                if (amount > products[index].total_sales_amount) {
+                    products[index].total_sales_amount = amount;
+                }
+            } else {
+                strcpy(products[count].product_ID, id);
+                products[count].total_sales_amount = amount;
+                count++;
+            }
+        }
+    }
+
+    sortProducts(products, count);
+
+    for (int i = 0; i < count; i++) {
+        printf("%s-%d\n", products[i].product_ID, products[i].total_sales_amount);
+    }
+
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+
+33. You are given an array of integers, arr, of size array_length.
+A "couple" is any two elements in a row. A “triplet” is any three elements in a row. The elements of a couple and a triplet must be continuous and non-circular i.e. they must NOT wrap around the end of the array.
+For example, in the array arr = [1, 2, 3, 4], there are three couples and two triplets as shown below:
+•            Couples: (1, 2), (2, 3), and (3, 4)
+•            Triplets: (1, 2, 3) and (2, 3, 4)
+Your task is to score arr as per the following rules:
+1.          For every couple in arr whose sum is even, increase the score by 5.
+2.          For every triplet in arr whose sum is odd AND whose product is even, increase the score by 10.
+3.          If neither of the above conditions are met, then the score is unchanged
+Output the final value of score for arr.
+Notes:
+•            Couples and triplets may overlap with each other
+•            The score is initially 0
+•            The array may contain positive and negative numbers
+•            0 is an even number.
+
+
+#include<stdio.h>
+int coupTrip(int arr[], int size){
+    int score=0;
+    for(int i=0, j=1; i<size-1, j<size; i++,j++){
+        if((arr[i]+arr[j])%2==0){
+            score+=5;
+        }
+    }
+    for(int i=0,j=1,k=2; i<size-2, j<size-1, k<size; i++,j++, k++){
+        if((arr[i]+arr[j]+arr[k])%2!=0 && (arr[i]*arr[j]*arr[k])%2==0){
+            score+=10;
+        }
+    }
+    return score;
+}
+int main(){
+    int arr[]={1,2,3,4,5,6};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    int result=coupTrip(arr, size);
+    printf("score is %d\n", result);
+    return 0;
+}
+
+
+#include<stdio.h>
+int coupTrip(int arr[], int size){
+    int i,j,k;
+    int score=0;
+    for(i=0,j=i+1;i<size-1,j<size;i++,j++){
+        if(arr[i]+arr[j]%2==0){
+            score+=5;
+        }
+    }
+    for(i=0,j=i+1,k=i+2; i<size-2,j<size-1,k<size;i++,j++,k++){
+        if(arr[i]+arr[j]+arr[k]%2!=0 && arr[i]*arr[j]*arr[k]%2==0){
+            score+=10;
+        }
+    }
+    return score;
+}
+int main(){
+    int arr[100], n;
+    printf("enter number of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ",n);
+    for(int i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    int result=coupTrip(arr, n);
+    printf("%d", result);
+    return 0;
+}
+
+---------------------END-----------------------------------------
+
+34.  You are given an array A of N integers.
+----Find the total number of elements which are not divisible by other elements in the array.
+
+A= [5,10,15]
+5 is the only element which is not divisible by any other number in the array
+so output is 1
+A= [24,11,8,3,16]
+Index 11,8,3 are the only elements which are not divisible by any other number in the array
+so output is 3
+
+#include<stdio.h>
+int countNotDivi(int arr[], int size){
+    int count=0;
+    for(int i=0; i<size; i++){
+        int divisible=0;
+        for(int j=0; j<size; j++){
+            if((i!=j) && arr[i]%arr[j]==0){
+                divisible=1;
+                break;
+            }
+        }
+        if(!divisible){
+            count++;
+        }
+    }
+    return count;
+}
+int main(){
+    int arr[]={5,10,15};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    int result=countNotDivi(arr,size);
+    printf("result is: \n", result);
+    return 0;
+}
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+17-08-25
+
+Basic Level
+----Reverse an array
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, i;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    int temp;
+    int start=0;
+    int end=n-1;
+    while(start<end){
+        temp=arr[start];
+        arr[start]=arr[end];
+        arr[end]=temp;
+        start++;
+        end--;
+    }
+    for(i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+    
+}
+
+-----Check if an array is sorted
+#include <stdio.h>
+int main() {
+    int arr[100], n, i, isSorted = 1;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+    printf("Enter %d elements: ", n);
+    for(i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    for(i = 0; i < n - 1; i++) {
+        if(arr[i] > arr[i + 1]) {
+            isSorted = 0;
+            break;
+        }
+    }
+    if(isSorted) {
+        printf("The array is sorted in ascending order.\n");
+    } else {
+        printf("The array is NOT sorted.\n");
+    }
+    return 0;
+}
+
+
+🔹 Intermediate Level
+----------------Left rotate or right rotate an array by k positions
+
+#include<stdio.h>
+void leftRotate(int arr[], int n, int d){
+    int temp[d], i;
+    for(i=0;i<d;i++){
+        temp[i]=arr[i];
+    }
+    for(i=d;i<n;i++){
+        arr[i-d]=arr[i];
+    }
+    for(i=0;i<d;i++){
+        arr[n-d+i]=temp[i];
+    }
+}
+int main(){
+    int arr[100], n,i, d;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ");
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    printf("enter position: ");
+    scanf("%d", &d);
+    leftRotate(arr, n, d);
+    for(int i=0; i<n;i++){
+        printf("%d", arr[i]);
+    }
+    printf("\n");
+    return 0;
+}
+
+////////////////////////////////////////////////////////////
+
+#include<stdio.h>
+void rightRotate(int arr[], int n, int d){
+    int temp[d];
+    for(int i=0;i<d;i++){
+        temp[i]=arr[n-d+i];
+    }
+    for(int i=n-d-1;i>=0;i--){
+        arr[i+d]=arr[i];
+    }
+    for(int i=0;i<d;i++){
+        arr[i]=temp[i];
+    }
+}
+int main(){
+    int arr[]={1,2,3,4,5};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int d=2;
+    rightRotate(arr, n, d);
+    for(int i=0;i<n;i++){
+        printd("%d", arr[i]);
+    }
+    printf("\n");
+    return 0;
+}
+
+
+-----Find the missing number in a sequence
+
+#include <stdio.h>
+
+int main() {
+    int arr[100], n, i, total, sum = 0;
+    printf("Enter the value of n (total numbers including the missing one): ");
+    scanf("%d", &n);
+    printf("Enter %d elements (from 1 to %d, with one missing):\n", n - 1, n);
+    for(i = 0; i < n - 1; i++) {
+        scanf("%d", &arr[i]);
+        sum += arr[i];
+    }
+    total = n * (n + 1) / 2;
+    int missing = total - sum;
+    printf("The missing number is: %d\n", missing);
+    return 0;
+}
+
+-----Find the intersection or union of two arrays
+
+#include<stdio.h>
+void intersection(int arr1[], int n1, int arr2[], int n2){
+    int i,j;
+    for(i=0;i<n1;i++){
+        for(j=0;j<n2;j++){
+            if(arr1[i]==arr2[j]){
+                printf("%d", arr1[i]);
+            }
+        }
+    }
+    printf("\n");
+}
+
+void unionArr(int arr1[], int n1, int arr2[], int n2){
+    int i,j;
+    for(i=0;i<n1;i++){
+        printf("%d", arr1[i]);
+    }
+    for(i=0;i<n2;i++){
+        int found=0;
+        for(j=0;j<n1;j++){
+            if(arr2[i]==arr1[j]){
+                found=1;
+                break;
+            }
+        }
+        if(!found){
+            printf("%d", arr2[i]);
+        }
+    }
+    printf("\n");
+}
+int main(){
+    int arr1[]={1,2,3,4};
+    int arr2[]={3,4,5,6};
+    int n1=sizeof(arr1)/sizeof(arr1[0]);
+    int n2=sizeof(arr2)/sizeof(arr2[0]);
+    unionArr(arr1, n1, arr2, n2);
+    intersection(arr1, n1, arr2, n2);
+    return 0;
+}
+
+----Move all zeros to the end of the array
+
+#include<stdio.h>
+void moveZero(int arr[], int n){
+    int count=0;
+    for(int i=0;i<n;i++){
+        if(arr[i]!=0){
+            arr[count++]=arr[i];
+        }
+    }
+    while(count<n){
+        arr[count++]=0;
+    }
+}
+int main(){
+    int arr[]={1,0,2,0,3};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    moveZero(arr,n);
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    printf("\n");
+    return 0;
+}
+
+---Find the pair with a given sum
+
+#include<stdio.h>
+void findPair(int arr[], int n, int sum){
+    int found=0;
+    for(int i=0;i<n-1;i++){
+        for(int j=i+1;j<n;j++){
+            if(arr[i]+arr[j]==sum){
+                printf("%d %d\n", arr[i], arr[j]);
+                found=1;
+            }
+        }
+    }
+    if(!found){
+        printf("no pair \n");
+    }
+}
+int main(){
+    int arr[]={8,7,2,5};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int sum=7;
+    findPair(arr, n, sum);
+    return 0;
+}
+
+
+🔹 Advanced Level
+Find the longest subarray with a given sum
+----Implement binary search on a sorted array
+
+#include<stdio.h>
+int binarySearch(int arr[], int n, int key){
+    int low=0, high=n-1;
+    while(low<=high){
+        int mid=(low+high)/2;
+        if(arr[mid]==key){
+            return mid;
+        }
+        else if(arr[mid]<key){
+            low=mid+1;
+        }
+        else{
+            high=mid-1;
+        }
+    }
+    return -1;
+}
+int main(){
+    int arr[]={2,5,8,12,16};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int key=12;
+    int result=binarySearch(arr, n, key);
+    if(result!=-1){
+        printf("%d", result);
+    }else{
+        printf("not found");
+    }
+    return 0;
+}
+
+-----Find the peak element in an array
+#include<stdio.h>
+int findPeak(int arr[], int n){
+    if(n==1){
+        return arr[0];
+    }
+    if(arr[0]>=arr[1]){
+        return arr[0];
+    }
+    for(int i=1; i<n-1;i++){
+        if(arr[i]>=arr[i-1] && arr[i]>=arr[i+1]){
+            return arr[i];
+        }
+    }
+    return arr[n-1];
+}
+int main(){
+    int arr[]={1,3,20,4,1};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int peak=findPeak(arr,n);
+    printf("%d", peak);
+    return 0;
+}
+
+
+----largest and second largest element in an array.
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, i;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ");
+    scanf("%d", &arr[i]);
+    int largest, second;
+    if(n<2){
+        printf("must have two elements.\n");
+        return 1;
+    }
+    if(arr[0]>arr[1]){
+        largest=arr[0];
+        second=arr[1];
+    }else{
+        largest=arr[1];
+        second=arr[0];
+    }
+    for(i=2;i<n;i++){
+        if(arr[i]>largest){
+            second=largest;
+            largest=arr[i];
+        }
+        else if (arr[i]>second && arr[i]!=largest){
+            second=arr[i];
+        }
+    }
+    printf("%d %d", largest, second);
+    return 0;
+}
+----Find the maximum and minimum element in an array.
+
+#include<stdio.h>
+int main(){
+    int arr[100], min, max, i, n;
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+    printf("Enter %d elements: ", n);
+    for(i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    min=arr[0];
+    max=arr[0];
+    for(i=1;i<n;i++){
+        if(arr[i]>max){
+            max=arr[i];
+        }
+        if(arr[i]<min){
+            min=arr[i];
+        }
+    }
+    printf("%d %d", max, min);
+    return 0;
+}
+
+----Sort an array in ascending order (bubble sort).
+
+#include<stdio.h>
+int main(){
+    int arr[100], n,i, j;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0; i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    for(i=0;i<n-1;i++){
+        int temp;
+        for(j=0;j<n-i-1;j++){
+            if(arr[j]>arr[j+1]){
+                temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+    printf("sorted elements: ");
+    for(i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+
+}
+----Sort an array in descending order.
+
+#include<stdio.h>
+int main(){
+    int arr[100], n,i, j;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0; i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    for(i=0;i<n-1;i++){
+        int temp;
+        for(j=0;j<n-i-1;j++){
+            if(arr[j]<arr[j+1]){
+                temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+    printf("sorted elements: ");
+    for(i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+
+}
+
+----Copy one array to another.
+
+#include<stdio.h>
+int main(){
+    int arr1[100], n1, i, arr2[100], j=0;
+    printf("enter no of elements: ");
+    scanf("%d", &n1);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n1;i++){
+        scanf("%d", &arr1[i]);
+    }
+    for(i=0;i<n1;i++){
+        arr2[j++]=arr1[i];
+    }
+    for(i=0;i<n1; i++){
+        printf("%d", arr2[i]);
+    }
+    return 0;
+}
+
+---Merge two arrays into a third array
+
+#include<stdio.h>
+int main(){
+    int arr1[100];
+    int arr2[100];
+    int n1, n2, i;
+    printf("enter no of elements of arr1: ");
+    scanf("%d", &n1);
+    printf("enter %d elements: ", n1);
+    for(i=0;i<n1;i++){
+        scanf("%d", &arr1[i]);
+    }
+    printf("enter no of elements of arr2: ");
+    scanf("%d", &n2);
+    printf("enter %d elements: ", n2);
+    for(i=0;i<n2;i++){
+        scanf("%d", &arr2[i]);
+    }
+    int arr3[n1+n2];
+    int j=0;
+    for(i=0;i<n1;i++){
+        arr3[j++]=arr1[i];
+    }
+    for(i=0;i<n2;i++){
+        arr3[j++]=arr2[i];
+    }
+    printf("merged elements: ");
+    for(i=0; i<n1+n2;i++){
+        printf("%d", arr3[i]);
+    }
+    return 0;
+}
+
+#include<stdio.h>
+int main(){
+    int arr1[100];
+    int arr2[100];
+    int n1, n2, i;
+    printf("enter no of elements of arr1: ");
+    scanf("%d", &n1);
+    printf("enter %d elements: ", n1);
+    for(i=0;i<n1;i++){
+        scanf("%d", &arr1[i]);
+    }
+    printf("enter no of elements of arr2: ");
+    scanf("%d", &n2);
+    printf("enter %d elements: ", n2);
+    for(i=0;i<n2;i++){
+        scanf("%d", &arr2[i]);
+    }
+    for(i=0;i<n2;i++){
+        arr1[n1+i]=arr2[i];
+    }
+    for(i=0; i<n1+n2;i++){
+        printf("%d", arr1[i]);
+    }
+    return 0;
+}
+
+🔹 20 Array Questions in C
+Declare and initialize an array of 10 integers.
+Input and print elements of an array.
+Find the sum of all elements in an array.
+--Calculate the average of array elements.
+
+#include<stdio.h>
+int average(int arr[], int size){
+    int sum=0;
+    int average=0;
+    for(int i=0; i<size; i++){
+        sum+=arr[i];
+        average=sum/size;
+    }
+    return average;
+}
+int main(){
+    int arr[]={1,2,3,4,5};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    int result=average(arr, size);
+    printf("%d\n", result);
+    return 0;
+}
+
+--Find the maximum and minimum element in an array.???????????????????????????????????????????????
+
+#include <stdio.h>
+
+void maxMin(int arr[], int size, int *max, int *min) {
+    *max = arr[0];
+    *min = arr[0];
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > *max) {
+            *max = arr[i];
+        }
+        if (arr[i] < *min) {
+            *min = arr[i];
+        }
+    }
+}
+
+int main() {
+    int arr[] = {3, 1, 5, 4};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int max, min;
+    maxMin(arr, size, &max, &min);
+    printf("Max: %d, Min: %d\n", max, min);
+    return 0;
+}
+
+
+
+-----Reverse the array.
+
+#include<stdio.h>
+void reverseArr(int arr[], int size){
+    int start=0;
+    int end=size-1;
+    while(start<end){
+        int temp=arr[start];
+        arr[start]=arr[end];
+        arr[end]=temp;
+        start++;
+        end--;
+    }
+}
+
+int main(){
+    int arr[]={2,3,4,5,6};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    reverseArr(arr, size);
+    for(int i=0; i<size;i++){
+        printf("%d\n", arr[i]);
+    }
+    return 0;
+}
+
+
+---------------------------------------------------
+
+#include<stdio.h>
+void reverse(int arr[], int size){
+    int start=0, end=size-1, temp;
+    while(start<end){
+        temp=arr[start];
+        arr[start]=arr[end];
+        arr[end]=temp;
+        start++;
+        end--;
+    }
+}
+int main(){
+    int arr[100], n, i, j;
+    printf("enter no of ele:  ");
+    scanf("%d", &n);
+    printf("enter %d ele", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    reverse(arr,n);
+    for(i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+----Count even and odd numbers in an array. 11111111111111111111111111111111111
+
+#include<stdio.h>
+int evenOdd(int arr[], int size, int *evenCount, int *oddCount){
+    *evenCount=0;
+    *oddCount=0;
+    for(int i=0; i<size; i++){
+        if(arr[i]%2==0){
+            *evenCount+=1;
+        }else{
+            *oddCount+=1;
+        }
+    }
+}
+int main(){
+    int arr[]={1,2,3,4,5};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    int evenCount, oddCount;
+    evenOdd(arr, size, &evenCount, &oddCount);
+    printf("even count %d odd count %d\n", evenCount, oddCount);
+    return 0;
+}
+
+------Search for an element using linear search.
+
+#include <stdio.h>
+
+int linearSearch(int arr[], int size, int key) {
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == key) {
+            return i; // Return the index where the key is found
+        }
+    }
+    return -1; // Return -1 if the key is not found
+}
+
+int main() {
+    int arr[] = {3, 1, 5, 4, 9};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    int key = 5;
+
+    int result = linearSearch(arr, size, key);
+
+    if (result != -1) {
+        printf("Element %d found at index %d.\n", key, result);
+    } else {
+        printf("Element %d not found in the array.\n", key);
+    }
+
+    return 0;
+}
+
+------Sort an array in ascending order.
+
+#include<stdio.h>
+void sort(int arr[], int size){
+    for(int i=0; i<size-1; i++){
+        for(int j=i+1; j<size; j++){
+            if(arr[i]>arr[j]){
+                int temp=arr[i];
+                arr[i]=arr[j];
+                arr[j]=temp;
+            }
+        }
+    }
+}
+
+int main(){
+    int arr[]={8,1,9,3,4,6,2};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    sort(arr,size);
+    for(int i=0; i<size; i++){
+        printf("%d\n", arr[i]);
+    }
+    return 0;
+}
+-----Sort an array in descending order.
+
+#include<stdio.h>
+void sort(int arr[], int size){
+    for(int i=0; i<size; i++){
+        for(int j=i+1; j<size; j++){
+            if(arr[i]<arr[j]){
+                int temp=arr[i];
+                arr[i]=arr[j];
+                arr[j]=temp;
+            }
+        }
+    }
+}
+
+int main(){
+    int arr[]={8,1,9,3,4,6,2};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    sort(arr,size);
+    for(int i=0; i<size; i++){
+        printf("%d\n", arr[i]);
+    }
+    return 0;
+}
+------Copy one array to another.
+
+#include<stdio.h>
+int main(){
+    int arr[]={1,2,3,4,5};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    int copy[size];
+    for(int i=0; i<size; i++){
+        copy[i]=arr[i];
+    }
+    printf("copied array: \n");
+    for(int i=0; i<size; i++){
+        printf("%d\n", copy[i]);
+    }
+    return 0;
+}
+
+-----Merge two arrays into a third array.
+
+#include <stdio.h>
+
+int main() {
+    int arr1[] = {1, 3, 5};
+    int arr2[] = {2, 4, 6, 8};
+    int size1 = sizeof(arr1) / sizeof(arr1[0]);
+    int size2 = sizeof(arr2) / sizeof(arr2[0]);
+    int merged[size1 + size2];
+
+    // Copy elements from arr1
+    for (int i = 0; i < size1; i++) {
+        merged[i] = arr1[i];
+    }
+
+    // Copy elements from arr2
+    for (int i = 0; i < size2; i++) {
+        merged[size1 + i] = arr2[i];
+    }
+
+    // Display merged array
+    printf("Merged array: ");
+    for (int i = 0; i < size1 + size2; i++) {
+        printf("%d ", merged[i]);
+    }
+
+    return 0;
+}
+
+------Find the second largest element in an array.
+#include<stdio.h>
+#include<limits.h>
+
+int secondLar(int arr[], int size){
+    int lar=INT_MIN;
+    int sec=INT_MIN;
+    for(int i=0; i<size; i++){
+        if(arr[i]>lar){
+            sec=lar;
+            lar=arr[i];
+        }else if(arr[i]>sec && arr[i]!=lar){
+            sec=arr[i];
+        }
+    }
+    return second;
+}
+
+
+int main() {
+    int arr[] = {3, 1, 5, 4, 9};
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    int secondLargest = findSecondLargest(arr, size);
+
+    if (secondLargest != INT_MIN) {
+        printf("Second largest element is: %d\n", secondLargest);
+    }
+    return 0;
+}
+
+
+
+-----Count frequency of each element. ?????????????????????????????//111
+
+#include<stdio.h>
+int main(){
+    int arr[100], freq[100];
+    int i,j,n,count;
+    printf("enter no of elements: \n");
+    scanf("%d\n", &n);
+    printf("enter %d elements: ", n);
+    for(int i=0; i<n;i++){
+        scanf("%d", &arr[i]);
+        freq[i]=-1;
+    }
+    for(i=0; i<n;i++){
+        int count=1;
+        for(j=i+1; j<n;j++){
+            if(arr[i]==arr[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    printf("frequency of each element: \n");
+    for(i=0;i<n;i++){
+        if(freq[i]!=0){
+            printf("%d occurs %d times\n", arr[i], freq[i]);
+        }
+    }
+    return 0;
+}
+
+
+#include <stdio.h>
+
+int main() {
+    int arr[100], freq[1000] = {0}; // assuming elements are in range 0–999
+    int n;
+
+    printf("Enter number of elements:\n");
+    scanf("%d", &n);
+
+    printf("Enter %d elements:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+        freq[arr[i]]++; // count frequency directly
+    }
+
+    printf("Frequency of each element:\n");
+    int printed[1000] = {0}; // to avoid duplicate printing
+    for (int i = 0; i < n; i++) {
+        if (!printed[arr[i]]) {
+            printf("%d occurs %d times\n", arr[i], freq[arr[i]]);
+            printed[arr[i]] = 1;
+        }
+    }
+
+    return 0;
+}
+
+
+#include<stdio.h>
+int main(){
+    int arr[100], freq[100];
+    int n,i,j,count;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0; i<n;i++){
+        scanf("%d", &arr[i]);
+        freq[i]=-1;
+    }
+    for(i=0; i<n;i++){
+        count=1;
+        for(j=i+1;j<n;j++){
+            if(arr[i]==arr[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    for(i=0;i<n;i++){
+        if(freq[i]!=0){
+            printf("%d occurs %d times", arr[i], freq[i]);
+        }
+    }
+    return 0;
+}
+
+------------Remove duplicate elements from an array.???????????222
+
+#include<stdio.h>
+int main(){
+    int arr[100], freq[100], res[100];
+    int n,i,j,count, index=0;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+        freq[i]=-1;
+    }
+    for(i=0;i<n;i++){
+        count=1;
+        for(j=i+1;j<n;j++){
+            if(arr[i]==arr[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    for(i=0;i<n;i++){
+        if(freq[i]==1){
+            res[index++]=arr[i];
+        }
+    }
+    printf("non duplicate elements: \n");
+    for(i=0;i<index;i++){
+        printf("%d", res[i]);
+    }
+
+    return 0;
+}
+
+
+#include<stdio.h>
+int main(){
+    int arr[100], freq[100], res[100];
+    int n, i, j, count, index=0;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+        freq[i]=-1;
+    }
+    for(i=0;i<n;i++){
+        count=1;
+        for(j=i+1;j<n;j++){
+            if(arr[i]==arr[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    for(i=0;i<n;i++){
+        if(freq[i]==1){
+            res[index++]=arr[i];
+        }
+    }
+    for(i=0;i<index;i++){
+        printf("%d", res[i]);
+    }
+    return 0;
+
+}
+
+
+-----------------------------------------------------------
+------------Insert an element at a specific position.
+
+#include<stdio.h>
+int main(){
+    int arr[100];
+    int i, n, a, b;
+    printf("enter no of elements");
+    scanf("%d", &n);
+    printf("enter %d elements", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    printf("enter element to insert:");
+    scanf("%d", &a);
+    printf("enter the index:");
+    scanf("%d", &b);
+    for(i=0;i<n;i++){
+        if(i==b){
+            arr[i]=a;
+        }
+    }
+    for(i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+
+-----------Delete an element from a specific position.
+
+#include<stdio.h>
+int main(){
+    int arr[100];
+    int i,n,a;
+    printf("enter no of elements: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    printf("enter index to remove: ");
+    scanf("%d", &a);
+    if(a<0 || a>=n){
+        printf("invalid index. \n");
+        return 1;
+    }
+    for(i=a;i<n-1;i++){
+        arr[i]=arr[i+1];
+    }
+    n--;
+    for(i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+-------------Shift array elements to the left.
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, i, first;
+    printf("enter no of ele: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    first=arr[0];
+    for(i=0; i<n-1;i++){
+        arr[i]=arr[i+1];
+    }
+    arr[n-1]=first;
+    for(i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+------------------------------------------------
+
+#include<stdio.h>
+int main(){
+    int arr[100], n, i, pos, j, first;
+    printf("enter no of ele: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    printf("enter pos to shift: ");
+    scanf("%d", &pos);
+    for(j=0; j<pos; j++){
+        first=arr[0];
+        for(i=0;i<n-1;i++){
+            arr[i]=arr[i+1];
+        }
+        arr[n-1]=first;
+    }
+    for(i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+
+}
+----Shift array elements to the right.??????????????????????????????
+
+#include<stdio.h>
+int main(){
+    int arr[100], i, n, end;
+    printf("enter no of ele: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    
+    end=arr[n-1];
+    for(i=n-1;i>0;i--){
+        arr[i]=arr[i-1];
+    }
+    arr[0]=end;
+    for(i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+---------------------------------------------
+
+#include<stdio.h>
+int main(){
+    int arr[100], i, n, end, j, pos;
+    printf("enter no of ele: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    scanf("%d", &arr[i]);
+    printf("enter pos to shift: ");
+    scanf("%d", &pos);
+    for(j=0;i<pos;j++){
+        end=arr[n-1];
+        for(i=n-1;i>0;i--){
+            arr[i]=arr[i-1];
+        }
+        arr[0]=end;
+    }
+    for(i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+------Find the sum of elements at even indices.
+#include<stdio.h>
+int main(){
+    int arr[100], i,n, sum=0;
+    printf("enter no of ele: ");
+    scanf("%d", &n);
+    printf("enter %d elements: ", n);
+    for(i=0;i<n;i++){
+        scanf("%d", &arr[i]);
+    }
+    for(i=0;i<n;i++){
+        if(i%2==0){
+            sum+=arr[i];
+        }
+    }
+    printf("%d", sum);
+    return 0;
+}
+
+🔹 20 String Questions in C
+-----Input and print a string.
+#include<stdio.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    scanf("%s",str);
+    printf("%s", str);
+    return 0;
+}
+-----Find the length of a string without using strlen().
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    printf("%s", str);
+    return 0;
+
+}
+------Reverse a string without using library functions.
+
+#include<stdio.h>
+#include<string.h>
+void reverse(char str[]){
+    int start=0;
+    int end=strlen(str)-1;
+    char temp;
+    while(start<end){
+        temp=str[start];
+        str[start]=str[end];
+        str[end]=temp;
+        start++;
+        end--;
+    }
+}
+
+int main(){
+    char str[100];
+    printf("enter string: ");
+    scanf("%s", str);
+    reverse(str);
+    printf("%s", str);
+    return 0;
+}
+
+-------------------------------------
+
+#include<stdio.h>
+#include<string.h>
+void reverse(char str[]){
+    int start=0;
+    int end=strlen(str)-1;
+    char temp;
+    while(start<end){
+        temp=str[start];
+        str[start]=str[end];
+        str[end]=temp;
+        start++;
+        end--;
+    }
+}
+
+int main(){
+    char str[100];
+    printf("enter string: ");
+    // scanf("%s", str);
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    reverse(str);
+    printf("%s", str);
+    return 0;
+}
+
+---------------------------------------------
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    int i,j;
+    char temp;
+    printf("enter string: ");
+    scanf("%s", str);
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    i=0;
+    j=strlen(str)-1;
+    while(i<j){
+        temp=str[i];
+        str[i]=str[j];
+        str[j]=temp;
+        i++;
+        j--;
+    }
+    printf("%s\n", str);
+    return 0;
+} 
+///////////////////////////////
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter str: ");
+    scanf("%s", str);
+    strrev(str);
+    printf("%s\n", str);
+    return 0;
+}
+///??????
+/////////////////////////////////////
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    int len, i;
+    char temp;
+    printf("enter str: ");
+    scanf("%s", str);
+    len=strlen(str);
+    for(i=0;i<len/2;i++){
+        temp=str[i];
+        str[i]=str[len-i-1];
+        str[len-i-1]=temp;
+    }
+    printf("%s\n", str);
+    return 0;
+
+}
+
+///////////////////////////////////////////////////////////reverse individual word
+
+#include<stdio.h>
+#include<string.h>
+
+void reverse(char str[], int start, int end){
+    char temp;
+    while(start<end){
+        temp=str[start];
+        str[start]=str[end];
+        str[end]=temp;
+        start++;
+        end--;
+    }
+}
+
+int main(){
+    char str[100];
+    int start=0, i=0;
+    printf("enter sentence: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    while(str[i] != '\0'){
+        if(str[i]==' '){
+            reverse(str, start, i-1);
+            start=i+1;
+        }
+        i++;
+    }
+    reverse(str, start, i-1);
+    printf("%s", str);
+    return 0;
+}
+
+
+
+------------------Check if a string is a palindrome.
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+bool isPalin(char str[]) {
+    int n = strlen(str);
+    int start = 0, end = n - 1;
+
+    while (start < end) {
+        if (str[start] != str[end]) {
+            return false;
+        }
+        start++;
+        end--;
+    }
+    return true;
+}
+
+int main() {
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';
+
+    if (isPalin(str)) {
+        printf("Palindrome\n");
+    } else {
+        printf("Not a palindrome\n");
+    }
+
+    return 0;
+}
+
+------Count vowels and consonants in a string.
+#include<stdio.h>
+#include<string.h>
+int main(){
+    int vowel=0, cons=0, i;
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    for(i=0;i<strlen(str); i++){
+        if(str[i]=='a' || str[i]=='e' || str[i]=='i' || str[i]== 'o' || str[i]== 'u'){
+            vowel+=1;
+        }else{
+            cons+=1;
+        }
+    }
+    printf("Vowels: %d, Cons: %d", vowel, cons);
+    return 0;
+
+}
+
+
+----Convert a string to uppercase.
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    for(int i=0; i<strlen(str); i++){  //for(int i=0; str[i]!='\0'; i++)
+        str[i]=toupper(str[i]);         // L U -32
+    }
+    printf("uppercase: %s\n", str);
+    return 0;
+}
+
+----Convert a string to lowercase.
+----Compare two strings without using strcmp().
+
+#include<stdio.h>
+int main(){
+    char str1[100], str2[100];
+    printf("enter first string: ");
+    scanf("%s", str1);
+    printf("enter second string: ");
+    scanf("%s", str2);
+    int i=0, flag=0;
+    while(str1[i]!='\0' || str2[i]!='\0'){
+        if(str1[i]!=str2[i]){
+            flag=1;
+            break;
+        }
+        i++;
+    }
+    if(flag==0){
+        printf("equal\n");
+    }else{
+        printf("not equal\n");
+    }
+    return 0;
+}
+---Concatenate two strings without using strcat().
+strcat(str1, str2)
+#include<stdio.h>
+int main(){
+    char str1[1000], str2[1000];
+    printf("enter str1: ");
+    scanf("%s", str1);
+    printf("enter str2: ");
+    scanf("%s", str2);
+    int i=0, j=0;
+    while(str1[i]!='\0'){
+        i++;
+    }
+    while(str2[j]!='\0'){
+        str1[i++]=str2[j++];
+    }
+    str1[i]='\0';
+    printf("string %s\n", str1);
+    return 0;
+}
+
+
+---Copy one string to another without using strcpy().
+strcpy(dest, src);
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char src[1000];
+    char des[1000];
+    int i;
+    printf("enter source: ");
+    fgets(src, sizeof(src), stdin);
+    src[strcspn(src, "\n")]='\0';
+    // scanf("%s", src);
+    for(i=0; src[i]!='\0'; i++){
+        des[i]=src[i];
+    }
+    des[i]='\0';
+    printf("des %s\n", des);
+    return 0;
+
+}
+
+-----Count frequency of each character.
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    char freq[100];
+    int i,j,count;
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    for(i=0;i<n;i++){
+        freq[i]=-1;
+    }
+    for(i=0; i<n; i++){
+        int count=1;
+        for(j=i+1; j<n;j++){
+            if(str[i]==str[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+
+    }
+    printf("frequency of each element: \n");
+    for(i=0;i<n;i++){
+        if(freq[i]!=0){
+            printf("%c occurs %d times\n", str[i], freq[i]);
+        }
+    }
+    return 0;
+}
+
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    char freq[100];
+    int i,j,count;
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    for(i=0;i<n;i++){
+        freq[i]=-1;
+    }
+    for(i=0;i<n;i++){
+        count=1;
+        for(j=i+1;j<n;j++){
+            if(str[i]==str[j]){
+                count++;
+                freq[j]=0;
+            }
+        }
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    printf("frequency of each element: \n");
+    for(i=0;i<n;i++){
+        if(freq[i]!=0){
+            printf("%c occurs %d times\n", str[i], freq[i]);
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+----Remove all vowels from a string.
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    char str1[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    int i, j=0;
+    for(i=0;i<n;i++){
+        if(str[i]!='a' && str[i]!='e' && str[i]!='i' && str[i]!='o' && str[i]!='u'){
+            str1[j++]=str[i];
+        }
+    }
+    str1[j]='\0';
+    printf("%s\n", str1);
+    
+    return 0;
+
+}
+
+
+----Remove all spaces from a string.
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    char str1[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    int i, j=0;
+    for(i=0;i<n;i++){
+        if(str[i]!=' '){
+            str1[j++]=str[i];
+        }
+    }
+    str1[j]='\0';
+    printf("%s\n", str1);
+    return 0;
+}
+
+
+---Replace spaces with hyphens.
+
+#include<stdio.h>
+#include<string.h>
+
+void replace(char str[100], char old, char new){
+    for(int i=0; str[i]!='\0'; i++){
+        if(str[i]==old){
+            str[i]=new;
+        }
+    }
+}
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    replace(str, ' ', '-');
+    printf("%s", str);
+    return 0;
+}
+
+void replace(char *str, char old, char new){
+    for(char *p=str; *p!='\0'; p++){
+        if(*p==old){
+            *p=new;
+        }
+    }
+}
+
+----Count the number of words in a string.
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    
+    int i, inWord=0, count=0;
+    for(i=0; str[i]!='\0';i++){
+        if(!isspace(str[i]) && inWord==0){
+            inWord=1;
+            count++;
+        }else if(isspace(str[i])){
+            inWord=0;
+        }
+    }
+    printf("%d", count);
+    return 0;
+}
+
+
+----Find the longest word in a string.
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    char *token=strtok(str, " ");
+    char *longest=token;
+
+    while(token!=NULL){
+        if(strlen(token)>strlen(longest)){
+            longest=token;
+        }
+        token=strtok(NULL, " ");
+    }
+    printf("longest word: %s\n", longest);
+    printf("length: %lu\n", strlen(longest));
+    return 0;
+}
+
+----Find the shortest word in a string.
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    char *token=strtok(str, " ");
+    char *shortest=token;
+    while(token != NULL){
+        if(strlen(token)<strlen(shortest)){
+            shortest=token;
+        }
+        token=strtok(NULL, " ");
+    }
+    printf("Shortest word: %s\n", shortest);
+    printf("length: %lu\n", strlen(shortest));
+    return 0;
+}
+
+
+----Check if one string is a substring of another.
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    char str1[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+
+    printf("enter string to find: ");
+    fgets(str1, sizeof(str1), stdin);
+    str1[strcspn(str1, "\n")]='\0';
+
+    if(strstr(str, str1)!=NULL){
+        printf("%s is substring of %s\n", str1, str);
+    }else{
+        printf("%s is not a substring of %s\n", str1, str);
+    }
+    return 0;
+}
+
+
+
+----Toggle the case of each character.
+
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+
+    for(int i=0; str[i]!='\0'; i++){
+        if(isupper(str[i])){
+            str[i]=tolower(str[i]);
+        }
+        else if(islower(str[i])){
+            str[i]=toupper(str[i]);
+        }
+    }
+    printf("toggled string: %s\n", str);
+    return 0;
+}
+
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    for(int i=0;str[i]!='\0';i++){
+        if(islower(str[i])){
+            str[i]=toupper(str[i]);
+        }
+        else if(isupper(str[i])){
+            str[i]=tolower(str[i]);
+        }
+    }
+    printf("toggled string: %s\n", str);
+    return 0;
+
+}
+
+----Sort characters of a string alphabetically.
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    char temp;
+
+    for(int i=0; i<n-1;i++){
+        for(int j=0;j<n-i-1;j++){
+            if(str[j]>str[j+1]){
+                temp=str[j];
+                str[j]=str[j+1];
+                str[j+1]=temp;
+            }
+        }
+    }
+    printf("sorted string: %s\n", str);
+    return 0;
+}
+
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int n=strlen(str);
+    char temp;
+    for(int i=0;i<n-1;i++){
+        for(int j=0;j<n-i-1;j++){
+            if(str[j]>str[j+1]){
+                temp=str[j];
+                str[j]=str[j+1];
+                str[j+1]=temp;
+            }
+        }
+    }
+    printf("sorted string: %s\n", str);
+    return 0;
+}
+
+
+--------------------------------------------------------
+--------------------------------------------------------
+---count words in a string
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int i, inword=0, count=0;
+    for(i=0;str[i]!='\0';i++){
+        if((!isspace(str[i])) && inword=0){
+            inword=1;
+            count++;
+        }else if(isspace(str[i])){
+            inword=0;
+        }
+    }
+    printf("%d", count);
+    return 0;
+}
+
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main(){
+    char str[100];
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; 
+    int n=strlen(str);
+    int i, inword=0, count=0;
+    for(i=0;i<n;i++){
+        if(!isspace(str[i]) && inword=0){
+            inword=1;
+            count++;
+        }else if(isspace(str[i])){
+            inword=0;
+        }
+    }
+    printf("%d", count);
+    return 0;
+}
+
+
+---print all substring of string.
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[100];
+    int i, j, k;
+
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove newline character
+
+    int len = strlen(str);
+
+    printf("All substrings of \"%s\":\n", str);
+    for (i = 0; i < len; i++) {
+        for (j = i; j < len; j++) {
+            for (k = i; k <= j; k++) {
+                printf("%c", str[k]);
+            }
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
+
+
+#include<stdio.h>
+#include<string.h>
+int main(){
+    int str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    int i,j,k,n;
+    n=strlen(str);
+    for(i=0;i<n;i++){
+        for(j=i;j<n;j++){
+            for(k=i;k<=j;k++){
+                printf("%c", str[k]);
+            }
+            printf("\n");
+        }
+    }
+    return 0;
+}
+
+
+--------------------------------------------------------
+--swap using pointers
+#include<stdio.h>
+void swap(int *a, int *b){
+    int temp;
+    temp=*a;
+    *a=*b;
+    *b=temp;
+}
+int main(){
+    int a, b;
+    printf("enter first number: ");
+    scanf("%d", &a);
+    printf("enter second number: ");
+    scanf("%d", &b);
+    swap(&a, &b);
+    printf("swapped numbers are %d, %d", a, b);
+    return 0;
+}
+
+-----------------------------------------------------------
+--length of string using pointer.
+
+#include<stdio.h>
+#include<string.h>
+int length(char *str){
+    int count=strlen(str);
+    return count;
+}
+int main(){
+    char str[100];
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    length(str);
+    return 0;
+}
+
+
+------------------------------------------------------ M1 CODING QUESTIONS----------------------------------------
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+
+
+1.--good number
+#include<stdio.h>
+#include<math.h>
+#include<stdbool.h>
+bool ispowertwo(int n){
+    return (n>0 && (n&(n-1))==0);
+}
+
+int countGoodNum(int arr[], int n){
+    int count=0;
+    for(int i=0;i<n;i++){
+        if(ispowertwo(arr[i])){
+            count++;
+        }
+    }
+    return count;
+}
+int main(){
+    int arr[]={2,3,4,5,8};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int result=countGoodNum(arr, n);
+    printf("%d", result);
+    return 0;
+}
+
+------------------------END---------------------------
+
+2.--magic array
+
+void magicArr(int arr[], int n, int result[]){
+    for(int i=0;i<n;i++){
+        int count=0;
+        for(int j=i+1;j<n;j++){
+            if(arr[i]>arr[j]){
+                count++;
+            }
+        }
+        result[i]=count;
+    }
+}
+int main(){
+    int arr[]={5,4,3,1,2};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    magicArr(arr, n, result);
+    for(int i=0;i<n;i++){
+        printf("%d\n", result[i]);
+    }
+    return 0;
+}
+
+------------------------END--------------------------
+
+3.--maximum average of subarrays
+
+#include<stdio.h>
+
+int maxArr(int arr[], int n){
+    int max=arr[0];
+    for(int i=0;i<n;i++){
+        if(arr[i]>max){
+            max=arr[i];
+        }
+    }
+    return max;
+}
+int main(){
+    int arr[]={1,2,3,4,5};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int result=maxArr(arr,n);
+    printf("%d", result);
+    return 0;
+}
+
+
+--------------------END-----------------------
+
+4.----weird array
+
+#include<stdio.h>
+void weirdArr(int arr[], int n, int result[]){
+    int sum=0;
+    for(int i=0; i<n; i++){
+        sum+=arr[i];
+    }
+    for(int i=0;i<n;i++){
+        int num=sum-arr[i];
+        result[i]=num;
+    }
+}
+int main(){
+    int arr[]={1,2,3,4};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    weirdArr(arr, n, result);
+    for(int i=0;i<n;i++){
+        printf("%d", result[i]);
+    }
+    return 0;
+
+}
+
+-----------------------------------------------------
+
+#include<stdio.h>
+void weirdArr(int arr[], int n, int result[]){
+    int sum=0;
+    for(int i=0;i<n;i++){
+        sum+=arr[i];
+    }
+    for(int i=0;i<n;i++){
+        int num=sum-arr[i];
+        result[i]=num;
+    }
+}
+
+int main(){
+    int arr[]={1,2,3,4};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int result[n];
+    weirdArr(arr, n, result);
+    for(int i=0;i<n;i++){
+        printf("%d", result[i]);
+    }
+    return 0;
+}
+
+------------------------END------------------------------
+
+5.----invigilation--> invglato
+#include<stdio.h>
+#include<string.h>
+void removeDup(char str[], int n, int freq[], char str1[]){
+    for(int i=0;i<n;i++){
+        freq[i]=-1;
+    }
+    for(int i=0;i<n;i++){
+        int count=1;
+        for(int j=i+1;j<n;j++){
+            if(str[i]==str[j]){
+                count++;
+                freq[j]=0;
+            }
+        }      
+        if(freq[i]!=0){
+            freq[i]=count;
+        }
+    }
+    int k=0;
+    for(int i=0;i<n;i++){
+        if(freq[i]!=0){
+            str1[k++]=str[i];
+        }
+    }
+    str1[k]='\0';
+    
+}
+int main(){
+    char str[]="invigilation";
+    int n=strlen(str);
+    char str1[100];
+    int freq[100];
+    removeDup(str, n, freq, str1);
+    printf("%s", str1);
+    return 0;
+}
+
+
+-----------------------END---------------------------------
+
+6.--remove duplicates from string
+#include <stdio.h>
+#include <string.h>
+
+void removeDuplicates(char str[], char result[]) {
+    int seen[256] = {0}; // Track all ASCII characters
+    int k = 0;
+    for (int i = 0; str[i] != '\0'; i++) {
+        unsigned char ch = (unsigned char)str[i];
+        if (!seen[ch]) {
+            seen[ch] = 1;
+            result[k++] = str[i];
+        }
+    }
+    result[k] = '\0';
+}
+
+int main() {
+    char str[] = "invigilation";
+    char result[100];
+    removeDuplicates(str, result);
+    printf("Result: %s\n", result);
+    return 0;
+}
+
+------------------------END-------------------------
+
+7.--check if all character in string are unique
+#include <stdio.h>
+#include <string.h>
+
+int isUnique(char str[]) {
+    int seen[256] = {0};
+    for (int i = 0; str[i] != '\0'; i++) {
+        unsigned char ch = (unsigned char)str[i];
+        if (seen[ch]) {
+            return 0; // Duplicate found
+        }
+        seen[ch] = 1;
+    }
+    return 1; // All characters are unique
+}
+
+int main() {
+    char str[] = "abcdefg";
+    if (isUnique(str)) {
+        printf("All characters are unique.\n");
+    } else {
+        printf("Duplicates found.\n");
+    }
+    return 0;
+}
+-------------------------------------------END-------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+
+------------------------------------------PRACTICE---------------------------------------------
+---count frequency of each character
+#include <stdio.h>
+#include <string.h>
+
+void countFrequency(char str[]) {
+    int freq[256] = {0};
+    for (int i = 0; str[i] != '\0'; i++) {
+        unsigned char ch = (unsigned char)str[i];
+        freq[ch]++;
+    }
+
+    for (int i = 0; i < 256; i++) {
+        if (freq[i] > 0) {
+            printf("'%c' appears %d times\n", i, freq[i]);
+        }
+    }
+}
+
+int main() {
+    char str[] = "invigilation";
+    countFrequency(str);
+    return 0;
+}
+
+------------------------------------------------
+
+#include<stdio.h>
+#include<string.h>
+
+void dupStr(char str[], char result[]){
+    char seen[275]={0};
+    int k=0;
+    for(int i=0;str[i]='\0';i++){
+        unsigned char ch=(unsigned char) str[i];
+        if(!seen[ch]){
+            seen[ch]=1;
+            result[k++]=str[i];
+        }
+    }
+    result[k]='\0';
+}
+int main(){
+    char str[]="invigilation";
+    int n=strlen(str);
+    char result[100];
+    dupStr(str, n, result);
+    printf("%s\n", result);
+    return 0;
+}
+
+---------------------
+--count words
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int count(char str[]){
+    int count=0;
+    for(int i=0;str[i]!='\0';i++){
+        if (!isspace(str[i]) && (i == 0 || isspace(str[i - 1]))) {
+            count++;
+        }
+
+    }
+    return count;
+}
+
+int main(){
+    char str[]=" hello   this is     me  how    about you  sham   ";
+    int wordCount=count(str);
+    printf("%d\n", wordCount);
+    return 0;
+}
+
+---------------------------------------------------
+
+#include<stdio.h>
+void removeDup(int arr[], int size){
+    int freq[256]={0}; 
+    int i =0,j=0;
+    for(int i=0;i<size;i++){
+        if(freq[arr[i]]==0){
+            freq[j++]=arr[i];
+            freq[arr[i]]=1;
+        }
+    }
+    for(int i=0;i<j;i++){
+        printf("%d", arr[i]);
+    }
+}
+    
+int main(){
+    int arr[]={1,2,3,2,3};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    removeDup(arr,size);
+    return 0;
+}
+
+
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+
+void capitalize(char str[]){
+    int n;
+    printf("%d",n);
+    if(!isspace(str[0])){
+        str[0]=toupper(str[0]);
+    }
+    for(int i=1;i<n;i++){
+        if(isspace(str[i-1])){
+            str[i]=toupper(str[i]);
+        }
+    }
+    
+}
+int main(){
+    char str[1000];
+    int n=strlen(str);
+    printf("enter string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")]='\0';
+    capitalize(str);
+    printf("%s", str);
+    return 0;
+}
+
+
+--------------remove duplicates two approach----------------------
+------------------------------------------------------------------
+#include<stdio.h>
+int removeDup(int arr[], int n){
+    if(n==0)return 0;
+    int temp[n];
+    int j;
+    for(int i=0;i<n-1;i++){
+        if(arr[i]!=arr[i+1]){
+            temp[j++]=arr[i];
+        }
+    }
+    temp[j++]=arr[i];
+    for(int i=0;i<j;i++){
+        arr[i]=temp[i];
+    }
+    return j;
+}
+int main(){
+    int arr[]={1,1,2,2,3,4,4};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int newL=removeDup(arr,n);
+    for(int i=0;i<newL;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+////or
+
+#include<stdio.h>
+int removeDup(int arr[], int n){
+    if(n==0) return 0;
+    int i=0;
+    for(int j=1;j<n;j++){
+        if(arr[i]!=arr[j]){
+            i++;
+            arr[i]=arr[j];
+        }
+    }
+    return i+1;
+}
+int main(){
+    int arr[]={1,1,2,2,3,4,4};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int newL=removeDup(arr,n);
+    for(int i=0;i<newL;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+---------------------------------------------------------
+------------------------------------------------------------
+
+
+---delete all occurrence of x-----
+#include<stdio.h>
+int removeOc(int arr[], int n, int x){
+    for(int i=0;i<n;i++){
+        if(arr[i]==x){
+            for(int i=0;i<n-1;i++){
+                arr[i]=arr[i+1];
+            }
+            n--;
+            i--;
+        }
+    }
+    return n;
+}
+int main(){
+    int arr[]={1,1,2,2,3,4,4};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int x=1;
+    
+    int len=removeOc(arr,n, x);
+    for(int i=0;i<len;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+--------------------------------------------------
+------------------------------------------------------------
+
+---move zero to end
+#include<stdio.h>
+void moveZero(int arr[], int n){
+    int temp[n];
+    int j=0;
+    for(int i=0;i<n;i++){
+        if(arr[i]!=0){
+            temp[j++]=arr[i]
+        }
+    }
+    for(int i=j;i<n;i++){
+        temp[j++]=0;
+    }
+    for(int i=0;i<n;i++){
+        arr[i]=temp[i];
+    }
+}
+int main(){
+    int arr[]={1,0,2,0};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    moveZero(arr,n);
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+
+}
+
+-------------------------------------------------
+------------------------------------------------------------
+
+--move zero to start
+#include<stdio.h>
+void moveZero(int arr[], int n){
+    int temp[n];
+    int j=0;
+    for(int i=0;i<n;i++){
+        if(arr[i]==0){
+            temp[j++]=arr[i];
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(arr[i]!=0){
+            temp[j++]=arr[i];
+        }
+    }
+    for(int i=0;i<n;i++){
+        arr[i]=temp[i];
+    }
+}
+int main(){
+    int arr[]={1,0,2,0};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    moveZero(arr,n);
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+---------------------------------------------------
+------------------------------------------------------------
+
+
+--partition array
+#include<stdio.h>
+void partitionArr(int arr[], int n){
+    int temp[n];
+    int j=0;
+    for(int i=0;i<n;i++){
+        if(arr[i]%2==0){
+            temp[j++]=arr[i];
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(arr[i]%2!=0){
+            temp[j++]=arr[i];
+        }
+    }
+    for(int i=0;i<n;i++){
+        arr[i]=temp[i];
+    }
+}
+int main(){
+    int arr[]={2,3,4,5,6,7,8};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    partitionArr(arr,n);
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+----------------------------------------------------
+-------------------------------------------
+
+--reverse in chunks
+
+#include<stdio.h>
+#define min(a,b) ((a)<(b)?(a):(b))
+void reverse(int arr[], int n, int x){
+    for(int i=0;i<n;i++){
+        int start=i;
+        int end=min(i+x-1, n-1);
+        while(start<end){
+            int temp=arr[start];
+            arr[start]=arr[end];
+            arr[end]=temp;
+            start++;
+            end--;
+        }
+        i+=x-1;
+    }
+}
+int main(){
+    int arr[]={1,2,3,4,5,6,7,8,9,10,11};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int x=3;
+    reverse(arr, n, x);
+    for(int i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+
+-----rotate right by k position---
+
+// Online C compiler to run C program online
+#include <stdio.h>
+void arrRotate(int arr[], int n, int k){
+    for(int i=0;i<k;i++){
+        int first=arr[n-1];
+        for(int j=n-1;j>=0;j--){
+            arr[j]=arr[j-1];
+        }
+        arr[0]=first;
+    }
+}
+
+
+int main() {
+    int arr[]={1,2,3,4,5};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int k=50;
+    k%=n;
+    arrRotate(arr,n,k);
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+
+---------------optimised array rotation-------------------------------
+------------------------------------------------------------
+
+---left rotation
+
+#include <stdio.h>
+void reverse(int arr[], int start, int end){
+    while(start<end){
+        int temp=arr[start];
+        arr[start]=arr[end];
+        arr[end]=temp;
+        start++;
+        end--;
+    }
+}
+
+
+int main() {
+    int arr[]={1,2,3,4,5, 6,7,8,9,10};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int k=4;
+    k%=n;
+    k=n-k;
+    reverse(arr,n-k,n-1);
+    reverse(arr,0,n-k-1);
+    reverse(arr, 0, n-1);
+    
+    for(int i=0;i<n;i++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+-------------------------------------------------------------------------
+------------------------------------------------------------
+
+--right rotation
+
+// Online C compiler to run C program online
+#include <stdio.h>
+void reverse(int arr[], int start, int end){
+    while(start<end){
+        int temp=arr[start];
+        arr[start]=arr[end];
+        arr[end]=temp;
+        start++;
+        end--;
+    }
+}
+
+
+int main() {
+    int arr[]={1,2,3,4,5, 6,7,8,9,10};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int k=4;
+    k%=n;
+    reverse(arr,n-k,n-1);
+    reverse(arr,0,n-k-1);
+    reverse(arr, 0, n-1);
+    
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+----------------------------------------------------
+
+--missing number by xor
+#include<stdio.h>
+int missingNo(int arr[], int n){
+    int xor1=0;
+    int xor2=0;
+    for(int i=1;i<=n;i++){
+        xor1^=i;
+    }
+    for(int i=0;i<n-1;i++){
+        xor2^=arr[i];
+    }
+    return xor1^xor2;
+}
+int main(){
+    int arr[]={1,2,3,4,5,6,7,8};
+    int n=9;
+    int result=missingNo(arr,n);
+    printf("%d", result);
+    return 0;
+}
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+--merge alternative positive and negative elements
+
+#include<stdio.h>
+void alterNum(int arr[], int n){
+    int p=0,q=0;
+    int arr1[n];
+    int arr2[n];
+    for(int i=0;i<n;i++){
+        if(arr[i]>0){
+            arr1[p++]=arr[i];
+        }else{
+            arr2[q++]=arr[i];
+        }
+    }
+    int i=0,j=0,k=0;
+    while(i<p && j<q){
+        arr[k++]=arr1[i++];
+        arr[k++]=arr2[j++];
+    }
+    
+    while (i < p)
+        arr[k++] = arr1[i++];
+    while (j < q)
+        arr[k++] = arr2[j++];
+}
+
+int main(){
+    int arr[]={1,0,2,0};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    moveZero(arr,n);
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+    return 0;
+}
+
+-----------------------------------------------------------------
+------------------------------------------------------------
+
+
+---2 repeating element in the array of size n+2.
+
+#include<stdio.h>//efficient
+void findRep(int arr[], int n){
+    int freq[n+1];
+    for(int i=0;i<=n;i++){
+        freq[i]=0;
+    }
+    for(int i=0;i<n+2;i++){
+        if(freq[arr[i]]==1){
+            printf("%d", arr[i]);
+        }else{
+            freq[arr[i]]++;
+        }
+    }
+}
+
+
+int main(){
+    int arr[]={1,2,3,4,5,6,5,4};
+    int n=6;
+    findRep(arr,n);
+    return 0;
+}
+
+---------------------------------------
+#include<stdio.h>///not efficient
+void findRep(int arr[], int n){
+    int temp[n];
+    int k=0;
+    for(int i=0;i<n+2;i++){
+        for(int j=i+1;j<n+2;j++){
+            if(arr[i]==arr[j]){
+                temp[k++]=arr[j];
+            }
+        }
+    }
+    for(int i=0;i<k;i++){
+        printf("%d\n", temp[i]);
+    }
+}
+int main(){
+    int arr[]={1,2,3,4,5,6,5,4};
+    int n=6;
+    findRep(arr,n);
+    return 0;
+}
+
+
+-------------------------------------------------------------
+------------------------------------------------------------
+
+
+--max length of subarray whose sum is k
+#include <stdio.h>
+
+#define MAX 1000
+#define OFFSET 500  // To handle negative prefix sums
+
+void maxSubLen(int arr[], int n) {
+    int arr1[n];
+    for (int i = 0; i < n; i++) {
+        arr1[i] = (arr[i] == 0) ? -1 : arr[i];
+    }
+
+    int prefixSum[n];
+    prefixSum[0] = arr1[0];
+    for (int i = 1; i < n; i++) {
+        prefixSum[i] = prefixSum[i - 1] + arr1[i];
+    }
+
+    int firstIndex[MAX];
+    for (int i = 0; i < MAX; i++) {
+        firstIndex[i] = -1;
+    }
+
+    int maxLen = 0;
+
+    for (int i = 0; i < n; i++) {
+        int sum = prefixSum[i];
+
+        if (sum == 0) {
+            maxLen = i + 1;  // Subarray from start to i
+        }
+
+        int index = sum + OFFSET;
+        if (firstIndex[index] != -1) {
+            int len = i - firstIndex[index];
+            if (len > maxLen) {
+                maxLen = len;
+            }
+        } else {
+            firstIndex[index] = i;  // Store first occurrence
+        }
+    }
+
+    printf("Maximum length of subarray with sum 0 is: %d\n", maxLen);
+}
+
+int main() {
+    int arr[] = {0, 0, 0, 0, 1, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    maxSubLen(arr, n);
+    return 0;
+}
+
+
+-------------------------------------------------------------
+------------------------------------------------------------
+
+
+--max sum subarray(kadane)
+
+#include<stdio.h>
+#include<limits.h>
+int maxSumSubarray(int arr[], int n){
+    int sum=0;
+    int max=INT_MIN;
+    for(int i=0;i<n;i++){
+        sum+=arr[i];
+        if(sum>max){
+            max=sum;
+        }
+        if(sum<0){
+            sum=0;
+        }
+    }
+    return max;
+}
+int main(){
+    int arr[]={-2,-3,-4,-1,-2,-1,-5,-3};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int maxSum=maxSumSubarray(arr,n);
+    printf("%d",maxSum);
+    return 0;
+}
+
+-----------------------------------------
+
+#include<stdio.h>
+#include<limits.h>
+int maxSumSubarray(int arr[], int n){
+    int sum=0;
+    int max=INT_MIN;
+    int arrStart=-1;
+    int arrEnd=-1;
+    int start=0;
+    for(int i=0;i<n;i++){
+        if(sum==0){
+            start=i;
+        }
+        sum+=arr[i];
+        if(sum>max){
+            max=sum;
+            arrStart=start;
+            arrEnd=i;
+        }
+        if(sum<0){
+            sum=0;
+        }
+    }
+    
+    printf("Max sum: %d\n", max);
+    printf("Start index: %d, End index: %d\n", arrStart, arrEnd);
+
+    return max;
+}
+int main(){
+    int arr[]={-2,-3,-4,-1,-2,-1,-5,-3};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    int maxSum=maxSumSubarray(arr,n);
+    printf("%d",maxSum);
+    return 0;
+}
+
+----------------------------------------
+
+int removeDup(int arr[], int n) {
+    if (n == 0 || n == 1)
+        return n;
+
+    int j = 0;
+
+    for (int i = 1; i < n; i++) {
+        if (arr[i] != arr[j]) {
+            j++;
+            arr[j] = arr[i];
+        }
+    }
+
+    return j + 1;
+}
+
+
+---------------------remove space from string---------------------------------
+------------------------------------------------------------
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+char str1[1000];
+void count(char str[]){
+    int j=0;
+    for(int i=0;str[i]!='\0';i++){
+        if (!isspace(str[i])){
+            str1[j++]=str[i];
+        }
+    }
+}
+
+int main(){
+    char str[]=" hello   this is     me  how    about you  sham   ";
+    count(str);
+    printf("%s\n", str1);
+    return 0;
+}
+
+--------------remove vowel
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+char str1[1000];
+void count(char str[]){
+    int j=0;
+    for(int i=0;str[i]!='\0';i++){
+        if (str[i]!='a' && str[i]!='e' && str[i]!='i' && str[i]!='o' && str[i]!='u'){
+            str1[j++]=str[i];
+        }
+    }
+}
+
+int main(){
+    char str[]=" hello   this is     me  how    about you  sham   ";
+    count(str);
+    printf("%s\n", str1);
+    return 0;
+}
+
+---------------------------------------------------------------
+------------------------------------------------------------
+
+
+---intersection of two arrays
+
+#include<stdio.h>
+void intersection(int arr1[], int arr2[], int size1, int size2){
+    int temp[100];
+    int k=0;
+    for(int i=0;i<size1;i++){
+        for(int j=0;j<size2;j++){
+            if(arr1[i]==arr2[j]){
+                temp[k++]=arr1[i];
+                break;
+            }
+        }
+    }
+    int freq[256]={0};
+    int j=0;
+    int result[100];
+    for(int i=0;i<k;i++){
+        if(freq[temp[i]]==0){
+            result[j++]=temp[i];
+            freq[temp[i]]=1;
+        }
+    }
+    for(int i=0;i<j;i++){
+        printf("%d", result[i]);
+    }
+    printf("\n");
+}
+int main(){
+    int arr1[]={1,2,3,4,5,5};
+    int arr2[]={3,4,5,6};
+    int size1=sizeof(arr1)/sizeof(arr1[0]);
+    int size2=sizeof(arr2)/sizeof(arr2[0]);
+    int arr[100];
+    intersection(arr1,arr2,size1,size2);
+    return 0;
+}
+
+
+--------------------------------------------------------------------
+------------------------------------------------------------
+
+
+--------------return true if array has any unique frequency
+
+#include<stdio.h>
+#include<stdbool.h>
+
+bool intersection(int arr[], int size){
+    int freq[256]={0};
+    for(int i=0;i<size;i++){
+        freq[arr[i]]++;
+    }
+    int freqCount[256]={0};
+    for(int i=0;i<256;i++){
+        if(freq[i]>0){
+            if(freqCount[freq[i]]!=0){
+                return false;
+            }
+            freqCount[freq[i]]=1;
+        }
+    }
+    return true;
+}
+int main(){
+    int arr[]={1,2,2,4,4};
+    int size=sizeof(arr)/sizeof(arr[0]);
+    intersection(arr, size);
+    if(intersection(arr,size)){
+        printf("true");
+    }else{
+        printf("false");
+    }
+    return 0;
+}
+
+
+---------------------------------------------------------------------
+------------------------------------------------------------
+
+--first unique char in string
+#include<stdio.h>
+void firstUnique(char str[]){
+    int freq[256]={0};
+    int j=0;
+    for(int i=0; str[i]!='\0'; i++){
+        freq[str[i]]++;
+    }
+    for(int i=0;i<256;i++){
+        if(freq[str[i]]==1){
+            printf("%c", str[i]);
+            break;
+        }
+    }
+}
+int main(){
+    char str[]="aafbcdd";
+    firstUnique(str);
+    return 0;
+}
+
+------------------------------------------------------------
+------------------------------------------------------------
+
+--reverse each word
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+
+void reverse(char str[], int start, int end){
+    while(start<end){
+        int temp=str[start];
+        str[start]=str[end];
+        str[end]=temp;
+        start++;
+        end--;
+    }
+}
+void remDup(char str[]){
+    int start=0;
+    int len=strlen(str);
+    for(int i=0;i<=len;i++){
+        if(str[i]==' ' || str[i]=='\0'){
+            reverse(str, start, i-1);
+            start=i+1;
+        }
+    }
+    
+}
+int main(){
+    char str[]="   hello world  ";
+    remDup(str);
+    printf("%s", str);
+    return 0;
+}
+
+=--------------------------------------------
+------------------------------------------------
+
+---largest and smallest word
+#include<stdio.h>
+#include<string.h>
+// #include<stdbool.h>
+#define MAX_LEN 100
+void largestWord(char str[]){
+    // char word[MAX_LEN];
+    char smallest[MAX_LEN];
+    char largest[MAX_LEN];
+    int minlen=MAX_LEN, maxlen=0;
+    char *token=strtok(str, " ");
+    while(token!=NULL){
+        int len=strlen(token);
+        if(len<minlen){
+            minlen=len;
+            strcpy(smallest,token);
+        }
+        if(len>maxlen){
+            maxlen=len;
+            strcpy(largest, token);
+        }
+        token = strtok(NULL, " ");
+    }    
+    printf("Smallest word: %s\n", smallest);
+    printf("Largest word: %s\n", largest);
+}
+
+int main(){
+    char str[]="my name is shambhavi";
+    largestWord(str);
+    return 0;
+}
+
+
+----------------------------------------------------
+------------------------------------------------------
+
+----most freq char in string
+#include <stdio.h>
+#include <string.h>
+
+void mostRepeat(char str[]) {
+    int freq[256] = {0};
+    for (int i = 0; str[i] != '\0'; i++) {
+        freq[(unsigned char)str[i]]++;
+    }
+
+    int max = 0;
+    char mostFreqChar = '\0';
+
+    for (int i = 0; i < 256; i++) {
+        if (freq[i] > max) {
+            max = freq[i];
+            mostFreqChar = (char)i;
+        }
+    }
+
+    printf("Most frequent character: %c\n", mostFreqChar);
+}
+
+int main() {
+    char str[] = "hellooo";
+    mostRepeat(str);
+    return 0;
+}
+
+-------------------------------------------------------------
+---------------------------------------------------------------
+
+//expand string
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+
+void firstRepeat(char str[]){
+    char str1[100];
+    int j=0;
+    for(int i=0;str[i]!='\0';i++){
+        if(isalpha(str[i]) && isdigit(str[i+1])){
+            int digit=str[i+1]-'0';
+            for(int k=0;k<digit;k++){
+                str1[j++]=str[i];
+            }
+        }
+    }
+    str1[j]='\0';
+    printf("%s", str1);
+}
+int main(){
+    char str[]="a3b2";
+    firstRepeat(str);
+    return 0;
+}
+
+
+
+--------------------swap adjacent pairs-------------------------------------------
+----------------------------------------------------------------------------
+
+#include<stdio.h>
+void nonZero(int arr[], int n){
+    for(int i=0;i<n-1;i+=2){
+        int temp=arr[i];
+        arr[i]=arr[i+1];
+        arr[i+1]=temp;
+    }
+    for(int i=0;i<n;i++){
+        printf("%d", arr[i]);
+    }
+
+}
+int main(){
+    int arr[]={1,2,3,4,5};
+    int n=sizeof(arr)/sizeof(arr[0]);
+    nonZero(arr,n);
+    return 0;
+}
+
+
+--------------------------------------------------------------
+------------------------------------------------------------
